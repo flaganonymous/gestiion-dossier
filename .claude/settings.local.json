@@ -4,7 +4,9 @@
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --no-turbopack)",
       "Bash(npm create:*)",
       "Bash(npm install:*)",
-      "Bash(npx shadcn@latest init --yes --defaults)"
+      "Bash(npx shadcn@latest init --yes --defaults)",
+      "Bash(npx shadcn@latest add card input label badge select table dialog alert dropdown-menu separator avatar --yes)",
+      "Bash(npm run:*)"
     ]
   }
 }
