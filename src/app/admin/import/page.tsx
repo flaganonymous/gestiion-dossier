@@ -244,7 +244,7 @@ export default function ImportPage() {
   if (pageLoading) {
     return (
       <div style={{ minHeight: '100vh', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#204ce5' }} />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#EE7D07' }} />
       </div>
     )
   }
@@ -277,8 +277,8 @@ export default function ImportPage() {
             <ArrowLeft className="h-4 w-4" /> Retour au tableau de bord
           </Link>
           <div className="flex items-center gap-3">
-            <div style={{ background: '#EEF2FF', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
-              <FolderUp className="h-5 w-5" style={{ color: '#204ce5' }} />
+            <div style={{ background: '#FFF5EB', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
+              <FolderUp className="h-5 w-5" style={{ color: '#EE7D07' }} />
             </div>
             <div>
               <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '24px', color: '#112337' }}>
@@ -332,7 +332,7 @@ export default function ImportPage() {
                     type="button"
                     style={{
                       display: 'flex', alignItems: 'center', gap: '8px',
-                      background: '#204ce5', color: '#fff', border: 'none',
+                      background: '#EE7D07', color: '#fff', border: 'none',
                       padding: '10px 24px', borderRadius: '8px',
                       fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                       cursor: 'pointer',
@@ -368,11 +368,11 @@ export default function ImportPage() {
                 padding: '32px 24px', textAlign: 'center', cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#204ce5'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(32,76,229,0.1)' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#EE7D07'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(32,76,229,0.1)' }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#EBEBEB'; e.currentTarget.style.boxShadow = 'none' }}
             >
-              <div style={{ background: '#EEF2FF', borderRadius: '12px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                <FolderPlus className="h-6 w-6" style={{ color: '#204ce5' }} />
+              <div style={{ background: '#FFF5EB', borderRadius: '12px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <FolderPlus className="h-6 w-6" style={{ color: '#EE7D07' }} />
               </div>
               <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: '#112337', marginBottom: '4px' }}>
                 Nouveau dossier
@@ -389,11 +389,11 @@ export default function ImportPage() {
                 padding: '32px 24px', textAlign: 'center', cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#204ce5'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(32,76,229,0.1)' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#EE7D07'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(32,76,229,0.1)' }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = '#EBEBEB'; e.currentTarget.style.boxShadow = 'none' }}
             >
-              <div style={{ background: '#EEF2FF', borderRadius: '12px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                <FolderOpen className="h-6 w-6" style={{ color: '#204ce5' }} />
+              <div style={{ background: '#FFF5EB', borderRadius: '12px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <FolderOpen className="h-6 w-6" style={{ color: '#EE7D07' }} />
               </div>
               <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: '#112337', marginBottom: '4px' }}>
                 Dossier existant
@@ -428,7 +428,7 @@ export default function ImportPage() {
                   onChange={e => setTitre(e.target.value)}
                   placeholder="Ex : Dupont Jean — Rachat credit immobilier"
                   style={inputStyle}
-                  onFocus={e => e.currentTarget.style.borderColor = '#204ce5'}
+                  onFocus={e => e.currentTarget.style.borderColor = '#EE7D07'}
                   onBlur={e => e.currentTarget.style.borderColor = '#EBEBEB'}
                 />
               </div>
@@ -481,7 +481,7 @@ export default function ImportPage() {
                   id="empruntADeux"
                   checked={empruntADeux}
                   onChange={e => setEmpruntADeux(e.target.checked)}
-                  style={{ width: '18px', height: '18px', accentColor: '#204ce5' }}
+                  style={{ width: '18px', height: '18px', accentColor: '#EE7D07' }}
                 />
                 <label htmlFor="empruntADeux" style={{ ...labelStyle, marginBottom: 0 }}>
                   Emprunt a deux
@@ -511,7 +511,7 @@ export default function ImportPage() {
                   onClick={handleImport}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
-                    background: importing ? '#93A3D4' : '#204ce5', color: '#fff', border: 'none',
+                    background: importing ? '#F5B86C' : '#EE7D07', color: '#fff', border: 'none',
                     padding: '10px 24px', borderRadius: '8px',
                     fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                     cursor: importing ? 'not-allowed' : 'pointer',
@@ -558,7 +558,7 @@ export default function ImportPage() {
                 <label style={labelStyle}>Dossier cible *</label>
                 {dossiersLoading ? (
                   <div className="flex items-center gap-2" style={{ padding: '10px', fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#585e6a' }}>
-                    <Loader2 className="h-4 w-4 animate-spin" style={{ color: '#204ce5' }} />
+                    <Loader2 className="h-4 w-4 animate-spin" style={{ color: '#EE7D07' }} />
                     Chargement des dossiers...
                   </div>
                 ) : (
@@ -620,7 +620,7 @@ export default function ImportPage() {
                   onClick={handleImport}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
-                    background: importing ? '#93A3D4' : '#204ce5', color: '#fff', border: 'none',
+                    background: importing ? '#F5B86C' : '#EE7D07', color: '#fff', border: 'none',
                     padding: '10px 24px', borderRadius: '8px',
                     fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                     cursor: importing ? 'not-allowed' : 'pointer',
@@ -658,24 +658,24 @@ export default function ImportPage() {
         onDragLeave={() => setDragging(false)}
         onClick={() => inputRef.current?.click()}
         style={{
-          border: `2px dashed ${dragging ? '#204ce5' : '#EBEBEB'}`,
+          border: `2px dashed ${dragging ? '#EE7D07' : '#EBEBEB'}`,
           borderRadius: '10px',
           padding: '40px 24px',
           textAlign: 'center',
           cursor: importing ? 'not-allowed' : 'pointer',
-          background: dragging ? '#EEF2FF' : '#FAFAFA',
+          background: dragging ? '#FFF5EB' : '#FAFAFA',
           transition: 'all 0.2s',
           opacity: importing ? 0.6 : 1,
         }}
       >
-        <div style={{ background: '#EEF2FF', borderRadius: '10px', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
-          <Upload className="h-6 w-6" style={{ color: '#204ce5' }} />
+        <div style={{ background: '#FFF5EB', borderRadius: '10px', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+          <Upload className="h-6 w-6" style={{ color: '#EE7D07' }} />
         </div>
         <p style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '14px', color: '#112337', marginBottom: '4px' }}>
           Glissez-deposez vos fichiers ici
         </p>
         <p style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '12px', color: '#585e6a' }}>
-          ou <span style={{ color: '#204ce5', fontWeight: 600 }}>cliquez pour selectionner</span> — PDF, Word, images (max 20 Mo par fichier)
+          ou <span style={{ color: '#EE7D07', fontWeight: 600 }}>cliquez pour selectionner</span> — PDF, Word, images (max 20 Mo par fichier)
         </p>
         <input
           ref={inputRef}
@@ -713,7 +713,7 @@ export default function ImportPage() {
                 <XCircle className="h-4 w-4" style={{ color: '#585e6a' }} />
               </button>
             )}
-            {uf.status === 'uploading' && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" style={{ color: '#204ce5' }} />}
+            {uf.status === 'uploading' && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" style={{ color: '#EE7D07' }} />}
             {uf.status === 'done' && <CheckCircle className="h-4 w-4 flex-shrink-0" style={{ color: '#16a34a' }} />}
             {uf.status === 'error' && (
               <div className="flex items-center gap-1" style={{ color: '#dc2626' }}>
@@ -740,7 +740,7 @@ export default function ImportPage() {
           </span>
         </div>
         <div style={{ width: '100%', height: '8px', background: '#EBEBEB', borderRadius: '4px', overflow: 'hidden' }}>
-          <div style={{ width: `${pct}%`, height: '100%', background: '#204ce5', borderRadius: '4px', transition: 'width 0.3s ease' }} />
+          <div style={{ width: `${pct}%`, height: '100%', background: '#EE7D07', borderRadius: '4px', transition: 'width 0.3s ease' }} />
         </div>
       </div>
     )

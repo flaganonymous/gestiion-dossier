@@ -50,13 +50,14 @@
 
 :root {
   /* Crédit Unique brand colors */
-  --cu-blue: #204ce5;
-  --cu-blue-dark: #001AB3;
-  --cu-blue-light: #527EFF;
-  --cu-blue-pale: #EEF2FF;
+  --cu-primary: #EE7D07;
+  --cu-primary-dark: #C96800;
+  --cu-primary-light: #F5A64D;
+  --cu-primary-pale: #FFF5EB;
+  --cu-secondary: #0E1520;
   --cu-gold: #dd9933;
   --cu-gold-light: #F5E6C8;
-  --cu-text: #112337;
+  --cu-text: #0E1520;
   --cu-text-muted: #585e6a;
   --cu-gray-light: #F5F5F5;
   --cu-gray-border: #EBEBEB;
@@ -67,19 +68,19 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #204ce5;
+  --primary: #EE7D07;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: #F5F5F5;
   --muted-foreground: #585e6a;
-  --accent: #EEF2FF;
-  --accent-foreground: #204ce5;
+  --accent: #FFF5EB;
+  --accent-foreground: #EE7D07;
   --destructive: oklch(0.577 0.245 27.325);
   --border: #EBEBEB;
   --input: #EBEBEB;
-  --ring: #204ce5;
-  --chart-1: #204ce5;
+  --ring: #EE7D07;
+  --chart-1: #EE7D07;
   --chart-2: #527EFF;
   --chart-3: #dd9933;
   --chart-4: #001AB3;
@@ -87,12 +88,12 @@
   --radius: 0.5rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: #112337;
-  --sidebar-primary: #204ce5;
+  --sidebar-primary: #EE7D07;
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: #EEF2FF;
-  --sidebar-accent-foreground: #204ce5;
+  --sidebar-accent: #FFF5EB;
+  --sidebar-accent-foreground: #EE7D07;
   --sidebar-border: #EBEBEB;
-  --sidebar-ring: #204ce5;
+  --sidebar-ring: #EE7D07;
 }
 
 .dark {

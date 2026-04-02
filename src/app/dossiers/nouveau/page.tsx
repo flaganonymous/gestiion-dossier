@@ -70,7 +70,7 @@ export default function NouveauDossierPage() {
   if (pageLoading) {
     return (
       <div style={{ minHeight: '100vh', background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#204ce5' }} />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#EE7D07' }} />
       </div>
     )
   }
@@ -102,8 +102,8 @@ export default function NouveauDossierPage() {
             <ArrowLeft className="h-4 w-4" /> Retour aux dossiers
           </Link>
           <div className="flex items-center gap-3">
-            <div style={{ background: '#EEF2FF', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
-              <FolderPlus className="h-5 w-5" style={{ color: '#204ce5' }} />
+            <div style={{ background: '#FFF5EB', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
+              <FolderPlus className="h-5 w-5" style={{ color: '#EE7D07' }} />
             </div>
             <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '24px', color: '#112337' }}>
               Nouveau dossier
@@ -122,7 +122,7 @@ export default function NouveauDossierPage() {
                 placeholder="Ex : Dupont Jean — Rachat crédit immobilier"
                 required
                 style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#204ce5'}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -170,7 +170,7 @@ export default function NouveauDossierPage() {
                 rows={3}
                 placeholder="Informations complémentaires..."
                 style={{ ...inputStyle, resize: 'none' as const }}
-                onFocus={e => e.target.style.borderColor = '#204ce5'}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -181,7 +181,7 @@ export default function NouveauDossierPage() {
                 id="empruntADeux"
                 checked={empruntADeux}
                 onChange={e => setEmpruntADeux(e.target.checked)}
-                style={{ width: '18px', height: '18px', accentColor: '#204ce5' }}
+                style={{ width: '18px', height: '18px', accentColor: '#EE7D07' }}
               />
               <label htmlFor="empruntADeux" style={labelStyle}>
                 Emprunt à deux (les documents seront à fournir par les deux emprunteurs)
@@ -226,7 +226,7 @@ export default function NouveauDossierPage() {
                 disabled={loading}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
-                  background: loading ? '#93A3D4' : '#204ce5', color: '#fff', border: 'none',
+                  background: loading ? '#F5B86C' : '#EE7D07', color: '#fff', border: 'none',
                   padding: '10px 24px', borderRadius: '8px',
                   fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                   cursor: loading ? 'not-allowed' : 'pointer',

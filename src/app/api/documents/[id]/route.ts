@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { getDownloadPresignedUrl, deleteS3Object } from '@/lib/s3'
+import { getDownloadPresignedUrl, getPreviewPresignedUrl, deleteS3Object } from '@/lib/s3'
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+  const isPreview = req.nextUrl.searchParams.get('preview') === '1'
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -14,13 +16,16 @@ export async function GET(
 
   const { data: doc } = await supabase
     .from('documents')
-    .select('s3_key, nom_fichier')
+    .select('s3_key, nom_fichier, type_mime')
     .eq('id', id)
     .single()
 
   if (!doc) return NextResponse.json({ error: 'Document introuvable' }, { status: 404 })
 
-  const url = await getDownloadPresignedUrl(doc.s3_key, doc.nom_fichier)
+  const url = isPreview
+    ? await getPreviewPresignedUrl(doc.s3_key, doc.type_mime || 'application/octet-stream')
+    : await getDownloadPresignedUrl(doc.s3_key, doc.nom_fichier)
+
   return NextResponse.json({ url })
 }
 

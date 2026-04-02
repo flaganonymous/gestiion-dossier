@@ -60,15 +60,15 @@ export function Navbar({ profile }: NavbarProps) {
           {/* Logo */}
           <div className="flex items-center gap-8">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div style={{ background: '#204ce5', borderRadius: '8px' }} className="w-8 h-8 flex items-center justify-center">
-                <span style={{ color: '#fff', fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: '14px' }}>CU</span>
-              </div>
-              <div className="hidden sm:block">
-                <span style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: '15px', color: '#112337' }}>
-                  Crédit Unique
+              <div className="flex items-center">
+                <span style={{ fontFamily: 'var(--font-poppins)', fontWeight: 300, fontSize: '16px', color: '#0E1520', letterSpacing: '1px' }}>
+                  CRÉDIT
                 </span>
-                <span style={{ fontFamily: 'var(--font-open-sans)', fontSize: '11px', color: '#585e6a', display: 'block', lineHeight: '1', marginTop: '-2px' }}>
-                  Gestion des dossiers
+                <span style={{ fontFamily: 'var(--font-poppins)', fontWeight: 700, fontSize: '16px', color: '#0E1520', letterSpacing: '1px' }}>
+                  UN1QUE
+                </span>
+                <span style={{ fontFamily: 'var(--font-open-sans)', fontSize: '10px', color: '#585e6a', marginLeft: '2px', alignSelf: 'flex-end', lineHeight: '1.8' }}>
+                  .COM
                 </span>
               </div>
             </Link>
@@ -86,8 +86,8 @@ export function Navbar({ profile }: NavbarProps) {
                     )}
                     style={{
                       fontFamily: 'var(--font-open-sans)',
-                      color: active ? '#204ce5' : '#585e6a',
-                      background: active ? '#EEF2FF' : 'transparent',
+                      color: active ? '#EE7D07' : '#585e6a',
+                      background: active ? '#FFF5EB' : 'transparent',
                       fontWeight: active ? 600 : 400,
                     }}
                   >
@@ -103,7 +103,7 @@ export function Navbar({ profile }: NavbarProps) {
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors outline-none cursor-pointer">
               <Avatar className="h-8 w-8">
-                <AvatarFallback style={{ background: '#204ce5', color: '#fff', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins)' }}>
+                <AvatarFallback style={{ background: '#EE7D07', color: '#fff', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins)' }}>
                   {initiales}
                 </AvatarFallback>
               </Avatar>

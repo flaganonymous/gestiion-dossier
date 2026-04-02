@@ -11,7 +11,7 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 const STATUT_BADGE: Record<string, { bg: string; color: string; label: string }> = {
-  en_cours: { bg: '#EEF2FF', color: '#204ce5', label: 'En cours' },
+  en_cours: { bg: '#FFF5EB', color: '#EE7D07', label: 'En cours' },
   finance: { bg: '#DCFCE7', color: '#16a34a', label: 'Financé' },
   refuse: { bg: '#FEF2F2', color: '#dc2626', label: 'Refusé' },
 }
@@ -69,7 +69,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   }
 
   async function handlePreview(doc: Document) {
-    const res = await fetch(`/api/documents/${doc.id}`)
+    const res = await fetch(`/api/documents/${doc.id}?preview=1`)
     if (!res.ok) return
     const { url } = await res.json()
     setPreviewUrl(url)
@@ -110,7 +110,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   } as const
 
   function getFileIcon(typeMime: string | null) {
-    if (typeMime?.startsWith('image/')) return <ImageIcon className="h-5 w-5" style={{ color: '#204ce5' }} />
+    if (typeMime?.startsWith('image/')) return <ImageIcon className="h-5 w-5" style={{ color: '#EE7D07' }} />
     return <FileText className="h-5 w-5" style={{ color: '#dd9933' }} />
   }
 
@@ -143,7 +143,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                   disabled={saving}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
-                    background: saving ? '#93A3D4' : '#204ce5', color: '#fff', border: 'none',
+                    background: saving ? '#F5B86C' : '#EE7D07', color: '#fff', border: 'none',
                     padding: '8px 16px', borderRadius: '8px',
                     fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
                     cursor: saving ? 'not-allowed' : 'pointer',
@@ -181,7 +181,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                 value={editTitre}
                 onChange={e => setEditTitre(e.target.value)}
                 style={editInputStyle}
-                onFocus={e => e.target.style.borderColor = '#204ce5'}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -194,7 +194,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                 rows={3}
                 placeholder="Informations complémentaires..."
                 style={{ ...editInputStyle, resize: 'none' as const }}
-                onFocus={e => e.target.style.borderColor = '#204ce5'}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -205,7 +205,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                 id="editEmpruntADeux"
                 checked={editEmpruntADeux}
                 onChange={e => setEditEmpruntADeux(e.target.checked)}
-                style={{ width: '18px', height: '18px', accentColor: '#204ce5' }}
+                style={{ width: '18px', height: '18px', accentColor: '#EE7D07' }}
               />
               <label htmlFor="editEmpruntADeux" style={editLabelStyle}>
                 Emprunt à deux (les documents seront à fournir par les deux emprunteurs)
@@ -248,11 +248,11 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                 </h1>
                 <div className="flex flex-wrap gap-4">
                   <span className="flex items-center gap-1.5" style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#585e6a' }}>
-                    <Calendar className="h-4 w-4" style={{ color: '#204ce5' }} /> {dossier.annee}
+                    <Calendar className="h-4 w-4" style={{ color: '#EE7D07' }} /> {dossier.annee}
                   </span>
                   {dossier.client && (
                     <span className="flex items-center gap-1.5" style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#585e6a' }}>
-                      <User className="h-4 w-4" style={{ color: '#204ce5' }} />
+                      <User className="h-4 w-4" style={{ color: '#EE7D07' }} />
                       Client : {dossier.client.prenom} {dossier.client.nom}
                     </span>
                   )}
@@ -272,7 +272,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                     onClick={() => setEditing(true)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: '6px',
-                      background: '#fff', color: '#204ce5', border: '1.5px solid #204ce5',
+                      background: '#fff', color: '#EE7D07', border: '1.5px solid #EE7D07',
                       padding: '8px 16px', borderRadius: '8px',
                       fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
                       cursor: 'pointer',
@@ -465,7 +465,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                         Prévisualisation non disponible pour ce type de fichier
                       </p>
                       <button onClick={() => handleDownload(previewDoc)} style={{
-                        marginTop: '16px', padding: '10px 20px', background: '#204ce5', color: '#fff', border: 'none', borderRadius: '8px',
+                        marginTop: '16px', padding: '10px 20px', background: '#EE7D07', color: '#fff', border: 'none', borderRadius: '8px',
                         fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', cursor: 'pointer',
                       }}>
                         <Download className="h-4 w-4 inline mr-2" /> Télécharger
@@ -481,7 +481,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
         {/* Historique */}
         <div style={{ background: '#fff', borderRadius: '12px', boxShadow: '0 1px 4px rgba(17,35,55,0.06)', overflow: 'hidden', alignSelf: 'start' }}>
           <div className="px-5 py-4 flex items-center gap-2" style={{ borderBottom: '1px solid #EBEBEB' }}>
-            <Clock className="h-4 w-4" style={{ color: '#204ce5' }} />
+            <Clock className="h-4 w-4" style={{ color: '#EE7D07' }} />
             <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '15px', color: '#112337' }}>
               Historique
             </h2>
@@ -497,7 +497,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                   const ancien = h.ancien_statut ? STATUT_BADGE[h.ancien_statut] : null
                   const nouveau = STATUT_BADGE[h.nouveau_statut]
                   return (
-                    <div key={h.id} style={{ borderLeft: '2px solid #EEF2FF', paddingLeft: '12px' }}>
+                    <div key={h.id} style={{ borderLeft: '2px solid #FFF5EB', paddingLeft: '12px' }}>
                       <div className="flex items-center gap-2 flex-wrap">
                         {ancien && (
                           <>
@@ -575,7 +575,7 @@ function DocumentRow({ doc, idx, total, onDownload, onDelete, onPreview, canEdit
           </button>
         )}
         <button onClick={() => onDownload(doc)} title="Télécharger"
-          style={{ padding: '6px', background: '#EEF2FF', border: 'none', borderRadius: '6px', cursor: 'pointer', color: '#204ce5' }}>
+          style={{ padding: '6px', background: '#FFF5EB', border: 'none', borderRadius: '6px', cursor: 'pointer', color: '#EE7D07' }}>
           <Download className="h-4 w-4" />
         </button>
         {canEdit && (
@@ -664,7 +664,7 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
             Pièces justificatives
           </h2>
           <div className="flex items-center gap-3">
-            <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: progressPercent === 100 ? '#16a34a' : '#204ce5' }}>
+            <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: progressPercent === 100 ? '#16a34a' : '#EE7D07' }}>
               {totalFourni}/{totalRequired} obligatoires
             </span>
             {canEdit && totalFourni < totalRequired && (
@@ -678,8 +678,8 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
                   padding: '5px 12px',
                   borderRadius: '8px',
                   border: 'none',
-                  background: '#EEF2FF',
-                  color: '#204ce5',
+                  background: '#FFF5EB',
+                  color: '#EE7D07',
                   cursor: sendingRappel ? 'not-allowed' : 'pointer',
                   opacity: sendingRappel ? 0.6 : 1,
                   transition: 'opacity 0.2s',
@@ -705,7 +705,7 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
         )}
         <div style={{ background: '#F5F5F5', borderRadius: '8px', height: '8px', overflow: 'hidden' }}>
           <div style={{
-            background: progressPercent === 100 ? '#16a34a' : '#204ce5',
+            background: progressPercent === 100 ? '#16a34a' : '#EE7D07',
             width: `${progressPercent}%`, height: '100%', borderRadius: '8px',
             transition: 'width 0.5s ease',
           }} />
@@ -732,9 +732,9 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
               style={{ border: 'none', background: 'none', cursor: 'pointer', textAlign: 'left' }}
             >
               <div className="flex items-center gap-3">
-                <div style={{ background: isComplete ? '#DCFCE7' : '#EEF2FF', borderRadius: '8px' }}
+                <div style={{ background: isComplete ? '#DCFCE7' : '#FFF5EB', borderRadius: '8px' }}
                   className="w-9 h-9 flex-shrink-0 flex items-center justify-center">
-                  <Icon className="h-5 w-5" style={{ color: isComplete ? '#16a34a' : '#204ce5' }} />
+                  <Icon className="h-5 w-5" style={{ color: isComplete ? '#16a34a' : '#EE7D07' }} />
                 </div>
                 <div>
                   <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', color: '#112337' }}>
@@ -794,7 +794,7 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
                                 </button>
                               )}
                               <button onClick={() => onDownload(doc)} title="Télécharger"
-                                style={{ padding: '4px', background: '#EEF2FF', border: 'none', borderRadius: '4px', cursor: 'pointer', color: '#204ce5' }}>
+                                style={{ padding: '4px', background: '#FFF5EB', border: 'none', borderRadius: '4px', cursor: 'pointer', color: '#EE7D07' }}>
                                 <Download className="h-3.5 w-3.5" />
                               </button>
                               {canEdit && (
@@ -817,7 +817,7 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
                           <button
                             onClick={() => setUploadingCat(req.id)}
                             className="flex items-center gap-1 mt-2"
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Open Sans, sans-serif', fontSize: '11px', color: '#204ce5', fontWeight: 600, padding: '2px 0' }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Open Sans, sans-serif', fontSize: '11px', color: '#EE7D07', fontWeight: 600, padding: '2px 0' }}
                           >
                             <Upload className="h-3 w-3" /> Ajouter un fichier
                           </button>

@@ -10,7 +10,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 const STATUT_BADGE: Record<string, { bg: string; color: string; label: string }> = {
-  en_cours: { bg: '#EEF2FF', color: '#204ce5', label: 'En cours' },
+  en_cours: { bg: '#FFF5EB', color: '#EE7D07', label: 'En cours' },
   finance: { bg: '#DCFCE7', color: '#16a34a', label: 'Financé' },
   refuse: { bg: '#FEF2F2', color: '#dc2626', label: 'Refusé' },
 }
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
                 <div style={{
                   background: '#fff', borderRadius: '12px', padding: '28px',
                   boxShadow: '0 1px 4px rgba(17,35,55,0.06)',
-                  borderLeft: '4px solid #204ce5',
+                  borderLeft: '4px solid #EE7D07',
                   cursor: 'pointer', transition: 'box-shadow 0.2s', marginBottom: '20px',
                 }} className="hover:shadow-md">
                   <div className="flex items-center justify-between mb-3">
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
                   </p>
                   <div style={{
                     display: 'inline-flex', alignItems: 'center', gap: '8px',
-                    background: '#204ce5', color: '#fff',
+                    background: '#EE7D07', color: '#fff',
                     padding: '10px 20px', borderRadius: '8px',
                     fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                   }}>
@@ -107,8 +107,8 @@ export default async function DashboardPage() {
                           style={{ borderBottom: idx < dossiers.length - 1 ? '1px solid #EBEBEB' : 'none' }}
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div style={{ background: '#EEF2FF', borderRadius: '8px' }} className="w-9 h-9 flex-shrink-0 flex items-center justify-center">
-                              <FolderOpen className="h-4 w-4" style={{ color: '#204ce5' }} />
+                            <div style={{ background: '#FFF5EB', borderRadius: '8px' }} className="w-9 h-9 flex-shrink-0 flex items-center justify-center">
+                              <FolderOpen className="h-4 w-4" style={{ color: '#EE7D07' }} />
                             </div>
                             <div className="min-w-0">
                               <p style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '14px', color: '#112337' }} className="truncate">
@@ -172,7 +172,7 @@ export default async function DashboardPage() {
             <Link href="/dossiers/nouveau">
               <button style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
-                background: '#204ce5', color: '#fff', border: 'none',
+                background: '#EE7D07', color: '#fff', border: 'none',
                 padding: '10px 20px', borderRadius: '8px',
                 fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                 cursor: 'pointer',
@@ -187,7 +187,7 @@ export default async function DashboardPage() {
         {/* Cartes stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
           {[
-            { key: 'en_cours', label: 'En cours', count: stats.en_cours, icon: FolderOpen, bg: '#EEF2FF', iconColor: '#204ce5', accent: '#204ce5' },
+            { key: 'en_cours', label: 'En cours', count: stats.en_cours, icon: FolderOpen, bg: '#FFF5EB', iconColor: '#EE7D07', accent: '#EE7D07' },
             { key: 'finance', label: 'Financés', count: stats.finance, icon: FolderCheck, bg: '#DCFCE7', iconColor: '#16a34a', accent: '#16a34a' },
             { key: 'refuse', label: 'Refusés', count: stats.refuse, icon: FolderX, bg: '#FEF2F2', iconColor: '#dc2626', accent: '#dc2626' },
           ].map(stat => (
@@ -222,7 +222,7 @@ export default async function DashboardPage() {
             <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '15px', color: '#112337' }}>
               Derniers dossiers
             </h2>
-            <Link href="/dossiers" className="flex items-center gap-1" style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#204ce5', fontWeight: 600 }}>
+            <Link href="/dossiers" className="flex items-center gap-1" style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#EE7D07', fontWeight: 600 }}>
               Voir tout <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -237,7 +237,7 @@ export default async function DashboardPage() {
                 <Link href="/dossiers/nouveau">
                   <button style={{
                     marginTop: '16px', padding: '10px 20px',
-                    background: '#204ce5', color: '#fff', border: 'none',
+                    background: '#EE7D07', color: '#fff', border: 'none',
                     borderRadius: '8px', fontFamily: 'Poppins, sans-serif',
                     fontWeight: 600, fontSize: '14px', cursor: 'pointer',
                   }}>
@@ -257,8 +257,8 @@ export default async function DashboardPage() {
                       style={{ borderBottom: idx < recents.length - 1 ? '1px solid #EBEBEB' : 'none' }}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div style={{ background: '#EEF2FF', borderRadius: '8px' }} className="w-9 h-9 flex-shrink-0 flex items-center justify-center">
-                          <FolderOpen className="h-4 w-4" style={{ color: '#204ce5' }} />
+                        <div style={{ background: '#FFF5EB', borderRadius: '8px' }} className="w-9 h-9 flex-shrink-0 flex items-center justify-center">
+                          <FolderOpen className="h-4 w-4" style={{ color: '#EE7D07' }} />
                         </div>
                         <div className="min-w-0">
                           <p style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '14px', color: '#112337' }} className="truncate">

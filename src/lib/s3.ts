@@ -51,6 +51,19 @@ export async function getDownloadPresignedUrl(s3Key: string, nomFichier: string)
 }
 
 /**
+ * Génère une URL pré-signée pour visualiser un fichier dans le navigateur (inline)
+ */
+export async function getPreviewPresignedUrl(s3Key: string, contentType: string): Promise<string> {
+  const command = new GetObjectCommand({
+    Bucket: BUCKET,
+    Key: s3Key,
+    ResponseContentDisposition: 'inline',
+    ResponseContentType: contentType,
+  })
+  return getSignedUrl(s3, command, { expiresIn: 900 })
+}
+
+/**
  * Supprime un fichier de S3
  */
 export async function deleteS3Object(s3Key: string): Promise<void> {

@@ -10,7 +10,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 const STATUT_BADGE: Record<string, { bg: string; color: string }> = {
-  en_cours: { bg: '#EEF2FF', color: '#204ce5' },
+  en_cours: { bg: '#FFF5EB', color: '#EE7D07' },
   finance: { bg: '#DCFCE7', color: '#16a34a' },
   refuse: { bg: '#FEF2F2', color: '#dc2626' },
 }
@@ -73,7 +73,7 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
               <Link href="/dossiers/nouveau">
                 <button style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
-                  background: '#204ce5', color: '#fff', border: 'none',
+                  background: '#EE7D07', color: '#fff', border: 'none',
                   padding: '10px 20px', borderRadius: '8px',
                   fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                   cursor: 'pointer',
@@ -132,7 +132,7 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
                     <span style={{
                       display: 'inline-block', padding: '6px 14px', borderRadius: '20px',
                       fontFamily: 'Open Sans, sans-serif', fontSize: '13px', fontWeight: active ? 600 : 400,
-                      background: active ? '#204ce5' : '#F5F5F5',
+                      background: active ? '#EE7D07' : '#F5F5F5',
                       color: active ? '#fff' : '#585e6a',
                       cursor: 'pointer', transition: 'all 0.15s',
                     }}>
@@ -178,7 +178,7 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
             {['admin', 'collaborateur', 'apporteur'].includes(profile.role) && (
               <Link href="/dossiers/nouveau">
                 <button style={{
-                  padding: '10px 24px', background: '#204ce5', color: '#fff',
+                  padding: '10px 24px', background: '#EE7D07', color: '#fff',
                   border: 'none', borderRadius: '8px',
                   fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', cursor: 'pointer',
                 }}>
@@ -198,8 +198,8 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
                     style={{ borderBottom: idx < dossiers.length - 1 ? '1px solid #EBEBEB' : 'none' }}
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div style={{ background: '#EEF2FF', borderRadius: '8px' }} className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
-                        <FolderOpen className="h-5 w-5" style={{ color: '#204ce5' }} />
+                      <div style={{ background: '#FFF5EB', borderRadius: '8px' }} className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
+                        <FolderOpen className="h-5 w-5" style={{ color: '#EE7D07' }} />
                       </div>
                       <div className="min-w-0">
                         <p style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '14px', color: '#112337' }} className="truncate">

@@ -88,30 +88,30 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
         onDragLeave={() => setDragging(false)}
         onClick={() => inputRef.current?.click()}
         style={{
-          border: `2px dashed ${dragging ? '#204ce5' : '#EBEBEB'}`,
+          border: `2px dashed ${dragging ? '#EE7D07' : '#EBEBEB'}`,
           borderRadius: compact ? '8px' : '10px',
           padding: compact ? '12px 16px' : '32px 24px',
           textAlign: 'center',
           cursor: 'pointer',
-          background: dragging ? '#EEF2FF' : '#FAFAFA',
+          background: dragging ? '#FFF5EB' : '#FAFAFA',
           transition: 'all 0.2s',
         }}
       >
         {compact ? (
           <p style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '12px', color: '#585e6a', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-            <Upload className="h-3.5 w-3.5" style={{ color: '#204ce5' }} />
-            <span style={{ color: '#204ce5', fontWeight: 600 }}>Cliquez pour ajouter</span> ou glissez-déposez
+            <Upload className="h-3.5 w-3.5" style={{ color: '#EE7D07' }} />
+            <span style={{ color: '#EE7D07', fontWeight: 600 }}>Cliquez pour ajouter</span> ou glissez-déposez
           </p>
         ) : (
           <>
-            <div style={{ background: '#EEF2FF', borderRadius: '10px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
-              <Upload className="h-5 w-5" style={{ color: '#204ce5' }} />
+            <div style={{ background: '#FFF5EB', borderRadius: '10px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+              <Upload className="h-5 w-5" style={{ color: '#EE7D07' }} />
             </div>
             <p style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '14px', color: '#112337', marginBottom: '4px' }}>
               Glissez-déposez vos fichiers ici
             </p>
             <p style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '12px', color: '#585e6a' }}>
-              ou <span style={{ color: '#204ce5', fontWeight: 600 }}>cliquez pour sélectionner</span> — PDF, Word, images (max 20 Mo)
+              ou <span style={{ color: '#EE7D07', fontWeight: 600 }}>cliquez pour sélectionner</span> — PDF, Word, images (max 20 Mo)
             </p>
           </>
         )}
@@ -137,7 +137,7 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
                   {formatSize(uf.file.size)}
                 </p>
               </div>
-              {uf.status === 'uploading' && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" style={{ color: '#204ce5' }} />}
+              {uf.status === 'uploading' && <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" style={{ color: '#EE7D07' }} />}
               {uf.status === 'done' && <CheckCircle className="h-4 w-4 flex-shrink-0" style={{ color: '#16a34a' }} />}
               {uf.status === 'error' && (
                 <div className="flex items-center gap-1" style={{ color: '#dc2626' }}>

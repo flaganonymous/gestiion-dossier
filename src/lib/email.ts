@@ -101,7 +101,7 @@ export async function sendTestEmail(configId: string, toEmail: string): Promise<
       from: `"${config.from_name}" <${config.from_email}>`,
       to: toEmail,
       subject: 'Test SMTP — Crédit Unique',
-      html: '<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;padding:20px;text-align:center"><div style="background:#204ce5;padding:16px;border-radius:10px;margin-bottom:20px"><h2 style="color:#fff;margin:0">Crédit Unique</h2></div><p style="font-size:16px;color:#112337"><strong>Configuration SMTP fonctionnelle !</strong></p><p style="color:#585e6a">Cet email confirme que la configuration <strong>' + config.nom + '</strong> fonctionne correctement.</p><p style="color:#585e6a;font-size:12px;margin-top:30px">Envoyé depuis Crédit Unique — Gestion des dossiers</p></div>',
+      html: '<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;padding:20px;text-align:center"><div style="background:#0E1520;padding:16px;border-radius:10px;margin-bottom:20px"><h2 style="color:#fff;margin:0"><span style="font-weight:300">CRÉDIT</span> <span style="color:#EE7D07;font-weight:700">UN1QUE</span></h2></div><p style="font-size:16px;color:#112337"><strong>Configuration SMTP fonctionnelle !</strong></p><p style="color:#585e6a">Cet email confirme que la configuration <strong>' + config.nom + '</strong> fonctionne correctement.</p><p style="color:#585e6a;font-size:12px;margin-top:30px">Envoyé depuis Crédit Unique — Gestion des dossiers</p></div>',
       text: `Test SMTP — Configuration "${config.nom}" fonctionnelle.\n\nCrédit Unique`,
     })
 

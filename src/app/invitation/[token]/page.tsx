@@ -102,7 +102,7 @@ export default function InvitationPage() {
         {/* Logo */}
         <div className="flex items-center gap-2 mb-8 justify-center">
           <div
-            style={{ background: '#204ce5', borderRadius: '8px' }}
+            style={{ background: '#EE7D07', borderRadius: '8px' }}
             className="w-9 h-9 flex items-center justify-center"
           >
             <span
@@ -132,7 +132,7 @@ export default function InvitationPage() {
           style={{
             background: '#fff',
             borderRadius: '16px',
-            boxShadow: '0 4px 24px rgba(32,76,229,0.08)',
+            boxShadow: '0 4px 24px rgba(238,125,7,0.08)',
             padding: '40px',
           }}
         >
@@ -141,7 +141,7 @@ export default function InvitationPage() {
             <div className="flex flex-col items-center gap-4 py-8">
               <Loader2
                 className="h-8 w-8 animate-spin"
-                style={{ color: '#204ce5' }}
+                style={{ color: '#EE7D07' }}
               />
               <p
                 style={{
@@ -198,7 +198,7 @@ export default function InvitationPage() {
                   style={{
                     fontFamily: 'Open Sans, sans-serif',
                     fontSize: '13px',
-                    color: '#204ce5',
+                    color: '#EE7D07',
                     fontWeight: 600,
                     textDecoration: 'none',
                   }}
@@ -214,10 +214,10 @@ export default function InvitationPage() {
             <>
               <div className="flex items-center gap-3 mb-8">
                 <div
-                  style={{ background: '#EEF2FF', borderRadius: '10px' }}
+                  style={{ background: '#FFF5EB', borderRadius: '10px' }}
                   className="w-10 h-10 flex items-center justify-center"
                 >
-                  <Lock className="h-5 w-5" style={{ color: '#204ce5' }} />
+                  <Lock className="h-5 w-5" style={{ color: '#EE7D07' }} />
                 </div>
                 <div>
                   <h2
@@ -255,7 +255,7 @@ export default function InvitationPage() {
                     autoComplete="new-password"
                     style={inputStyle}
                     onFocus={(e) =>
-                      (e.target.style.borderColor = '#204ce5')
+                      (e.target.style.borderColor = '#EE7D07')
                     }
                     onBlur={(e) =>
                       (e.target.style.borderColor = '#EBEBEB')
@@ -275,7 +275,7 @@ export default function InvitationPage() {
                     autoComplete="new-password"
                     style={inputStyle}
                     onFocus={(e) =>
-                      (e.target.style.borderColor = '#204ce5')
+                      (e.target.style.borderColor = '#EE7D07')
                     }
                     onBlur={(e) =>
                       (e.target.style.borderColor = '#EBEBEB')
@@ -305,7 +305,7 @@ export default function InvitationPage() {
                   style={{
                     width: '100%',
                     padding: '12px',
-                    background: submitting ? '#93A3D4' : '#204ce5',
+                    background: submitting ? '#F5B86C' : '#EE7D07',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '8px',
@@ -375,7 +375,7 @@ export default function InvitationPage() {
                   onClick={() => router.push('/login')}
                   style={{
                     padding: '10px 24px',
-                    background: '#204ce5',
+                    background: '#EE7D07',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '8px',

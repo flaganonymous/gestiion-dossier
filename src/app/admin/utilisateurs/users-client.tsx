@@ -8,7 +8,7 @@ import { Plus, UserCheck, UserX, Loader2, Users } from 'lucide-react'
 
 const ROLE_COLORS: Record<UserRole, { bg: string; color: string }> = {
   admin: { bg: '#EDE9FE', color: '#7C3AED' },
-  collaborateur: { bg: '#EEF2FF', color: '#204ce5' },
+  collaborateur: { bg: '#FFF5EB', color: '#EE7D07' },
   apporteur: { bg: '#DCFCE7', color: '#16a34a' },
   client: { bg: '#F5F5F5', color: '#585e6a' },
 }
@@ -79,7 +79,7 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
           <DialogTrigger>
             <button style={{
               display: 'flex', alignItems: 'center', gap: '8px',
-              background: '#204ce5', color: '#fff', border: 'none',
+              background: '#EE7D07', color: '#fff', border: 'none',
               padding: '10px 20px', borderRadius: '8px',
               fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', cursor: 'pointer',
             }}>
@@ -153,7 +153,7 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
 
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={loading === 'create'}
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: loading === 'create' ? '#93A3D4' : '#204ce5', color: '#fff', border: 'none', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', cursor: loading === 'create' ? 'not-allowed' : 'pointer' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: loading === 'create' ? '#F5B86C' : '#EE7D07', color: '#fff', border: 'none', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', cursor: loading === 'create' ? 'not-allowed' : 'pointer' }}
                 >
                   {loading === 'create' && <Loader2 className="h-4 w-4 animate-spin" />}
                   Créer le compte

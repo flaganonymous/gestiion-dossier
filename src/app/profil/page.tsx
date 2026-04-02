@@ -99,7 +99,7 @@ export default function ProfilPage() {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center" style={{ background: '#F5F5F5' }}>
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#204ce5' }} />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#EE7D07' }} />
       </div>
     )
   }
@@ -151,11 +151,11 @@ export default function ProfilPage() {
         </h1>
 
         {/* Informations personnelles */}
-        <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(32,76,229,0.08)', padding: '32px', marginBottom: '24px' }}>
+        <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(238,125,7,0.08)', padding: '32px', marginBottom: '24px' }}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div style={{ background: '#EEF2FF', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
-                <User className="h-5 w-5" style={{ color: '#204ce5' }} />
+              <div style={{ background: '#FFF5EB', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
+                <User className="h-5 w-5" style={{ color: '#EE7D07' }} />
               </div>
               <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: '#112337' }}>
                 Informations personnelles
@@ -169,7 +169,7 @@ export default function ProfilPage() {
                   padding: '8px 16px', borderRadius: '8px',
                   border: '1.5px solid #EBEBEB', background: '#fff',
                   fontFamily: 'Open Sans, sans-serif', fontSize: '13px', fontWeight: 600,
-                  color: '#204ce5', cursor: 'pointer',
+                  color: '#EE7D07', cursor: 'pointer',
                 }}
               >
                 <Pencil className="h-4 w-4" />
@@ -183,7 +183,7 @@ export default function ProfilPage() {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
                     padding: '8px 16px', borderRadius: '8px',
-                    border: 'none', background: '#204ce5',
+                    border: 'none', background: '#EE7D07',
                     fontFamily: 'Open Sans, sans-serif', fontSize: '13px', fontWeight: 600,
                     color: '#fff', cursor: savingProfile ? 'not-allowed' : 'pointer',
                   }}
@@ -229,7 +229,7 @@ export default function ProfilPage() {
                 onChange={e => setPrenom(e.target.value)}
                 disabled={!editing}
                 style={editing ? inputStyle : inputDisabledStyle}
-                onFocus={e => { if (editing) e.target.style.borderColor = '#204ce5' }}
+                onFocus={e => { if (editing) e.target.style.borderColor = '#EE7D07' }}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -241,7 +241,7 @@ export default function ProfilPage() {
                 onChange={e => setNom(e.target.value)}
                 disabled={!editing}
                 style={editing ? inputStyle : inputDisabledStyle}
-                onFocus={e => { if (editing) e.target.style.borderColor = '#204ce5' }}
+                onFocus={e => { if (editing) e.target.style.borderColor = '#EE7D07' }}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -267,10 +267,10 @@ export default function ProfilPage() {
         </div>
 
         {/* Changer le mot de passe */}
-        <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(32,76,229,0.08)', padding: '32px' }}>
+        <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(238,125,7,0.08)', padding: '32px' }}>
           <div className="flex items-center gap-3 mb-6">
-            <div style={{ background: '#EEF2FF', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
-              <KeyRound className="h-5 w-5" style={{ color: '#204ce5' }} />
+            <div style={{ background: '#FFF5EB', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
+              <KeyRound className="h-5 w-5" style={{ color: '#EE7D07' }} />
             </div>
             <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: '#112337' }}>
               Changer le mot de passe
@@ -299,7 +299,7 @@ export default function ProfilPage() {
                 required
                 autoComplete="new-password"
                 style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#204ce5'}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -312,7 +312,7 @@ export default function ProfilPage() {
                 required
                 autoComplete="new-password"
                 style={inputStyle}
-                onFocus={e => e.target.style.borderColor = '#204ce5'}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
               />
             </div>
@@ -321,7 +321,7 @@ export default function ProfilPage() {
               disabled={savingPassword}
               style={{
                 padding: '10px 24px',
-                background: savingPassword ? '#93A3D4' : '#204ce5',
+                background: savingPassword ? '#F5B86C' : '#EE7D07',
                 color: '#fff', border: 'none', borderRadius: '8px',
                 fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                 cursor: savingPassword ? 'not-allowed' : 'pointer',

@@ -39,7 +39,7 @@ const PROVIDER_LABELS: Record<string, string> = {
 }
 
 const PROVIDER_COLORS: Record<string, { bg: string; color: string }> = {
-  brevo: { bg: '#EEF2FF', color: '#204ce5' },
+  brevo: { bg: '#FFF5EB', color: '#EE7D07' },
   mautic: { bg: '#DCFCE7', color: '#16a34a' },
   ses: { bg: '#FEF3C7', color: '#d97706' },
   custom: { bg: '#F5F5F5', color: '#585e6a' },
@@ -275,7 +275,7 @@ export default function EmailConfigPage() {
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#F5F5F5' }}>
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#204ce5' }} />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#EE7D07' }} />
       </div>
     )
   }
@@ -302,7 +302,7 @@ export default function EmailConfigPage() {
   }
 
   const btnPrimary: React.CSSProperties = {
-    background: '#204ce5',
+    background: '#EE7D07',
     color: '#fff',
     fontFamily: 'Poppins, sans-serif',
     fontWeight: 600,
@@ -394,8 +394,8 @@ export default function EmailConfigPage() {
               fontFamily: 'Open Sans, sans-serif',
               fontSize: '14px',
               fontWeight: activeTab === 'smtp' ? 600 : 400,
-              color: activeTab === 'smtp' ? '#204ce5' : '#585e6a',
-              background: activeTab === 'smtp' ? '#EEF2FF' : 'transparent',
+              color: activeTab === 'smtp' ? '#EE7D07' : '#585e6a',
+              background: activeTab === 'smtp' ? '#FFF5EB' : 'transparent',
               border: 'none',
               borderRadius: '8px',
               padding: '8px 20px',
@@ -414,8 +414,8 @@ export default function EmailConfigPage() {
               fontFamily: 'Open Sans, sans-serif',
               fontSize: '14px',
               fontWeight: activeTab === 'templates' ? 600 : 400,
-              color: activeTab === 'templates' ? '#204ce5' : '#585e6a',
-              background: activeTab === 'templates' ? '#EEF2FF' : 'transparent',
+              color: activeTab === 'templates' ? '#EE7D07' : '#585e6a',
+              background: activeTab === 'templates' ? '#FFF5EB' : 'transparent',
               border: 'none',
               borderRadius: '8px',
               padding: '8px 20px',
@@ -544,7 +544,7 @@ export default function EmailConfigPage() {
                         type="checkbox"
                         checked={smtpForm.use_tls}
                         onChange={e => setSmtpForm(p => ({ ...p, use_tls: e.target.checked }))}
-                        style={{ width: '16px', height: '16px', accentColor: '#204ce5' }}
+                        style={{ width: '16px', height: '16px', accentColor: '#EE7D07' }}
                       />
                       Utiliser TLS
                     </label>
@@ -803,8 +803,8 @@ export default function EmailConfigPage() {
                               <span
                                 key={v}
                                 style={{
-                                  background: '#EEF2FF',
-                                  color: '#204ce5',
+                                  background: '#FFF5EB',
+                                  color: '#EE7D07',
                                   fontSize: '11px',
                                   fontFamily: 'monospace',
                                   padding: '2px 8px',

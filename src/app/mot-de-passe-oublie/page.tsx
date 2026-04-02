@@ -37,16 +37,13 @@ export default function ForgotPasswordPage() {
       {/* Panneau gauche — branding */}
       <div
         className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(135deg, #001AB3 0%, #204ce5 60%, #527EFF 100%)' }}
+        style={{ background: 'linear-gradient(135deg, #0E1520 0%, #1a2332 60%, #243040 100%)' }}
       >
         <div>
-          <div className="flex items-center gap-3 mb-16">
-            <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
-              <span style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px' }}>CU</span>
-            </div>
-            <span style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px' }}>
-              Cr&eacute;dit Unique
-            </span>
+          <div className="flex items-center gap-1 mb-16">
+            <span style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 300, fontSize: '22px', letterSpacing: '1.5px' }}>CRÉDIT</span>
+            <span style={{ color: '#EE7D07', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '22px', letterSpacing: '1.5px' }}>UN1QUE</span>
+            <span style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'Open Sans, sans-serif', fontSize: '11px', alignSelf: 'flex-end', lineHeight: '2.2' }}>.COM</span>
           </div>
 
           <h1 style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '36px', lineHeight: 1.2 }} className="mb-6">
@@ -76,17 +73,16 @@ export default function ForgotPasswordPage() {
         <div className="w-full max-w-md">
 
           {/* Logo mobile */}
-          <div className="flex items-center gap-2 mb-10 lg:hidden justify-center">
-            <div style={{ background: '#204ce5', borderRadius: '8px' }} className="w-9 h-9 flex items-center justify-center">
-              <span style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>CU</span>
-            </div>
-            <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: '#112337' }}>Cr&eacute;dit Unique</span>
+          <div className="flex items-center gap-1 mb-10 lg:hidden justify-center">
+            <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 300, fontSize: '20px', color: '#0E1520', letterSpacing: '1px' }}>CRÉDIT</span>
+            <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: '#0E1520', letterSpacing: '1px' }}>UN1QUE</span>
+            <span style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '10px', color: '#585e6a', alignSelf: 'flex-end', lineHeight: '2.2' }}>.COM</span>
           </div>
 
-          <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(32,76,229,0.08)', padding: '40px' }}>
+          <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(238,125,7,0.08)', padding: '40px' }}>
             <div className="flex items-center gap-3 mb-8">
-              <div style={{ background: '#EEF2FF', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
-                <Mail className="h-5 w-5" style={{ color: '#204ce5' }} />
+              <div style={{ background: '#FFF5EB', borderRadius: '10px' }} className="w-10 h-10 flex items-center justify-center">
+                <Mail className="h-5 w-5" style={{ color: '#EE7D07' }} />
               </div>
               <div>
                 <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: '#112337' }}>
@@ -111,7 +107,7 @@ export default function ForgotPasswordPage() {
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 600,
                     fontSize: '14px',
-                    color: '#204ce5',
+                    color: '#EE7D07',
                   }}
                 >
                   Retour &agrave; la connexion
@@ -136,7 +132,7 @@ export default function ForgotPasswordPage() {
                       fontFamily: 'Open Sans, sans-serif', fontSize: '14px', color: '#112337',
                       outline: 'none', transition: 'border-color 0.2s',
                     }}
-                    onFocus={e => e.target.style.borderColor = '#204ce5'}
+                    onFocus={e => e.target.style.borderColor = '#EE7D07'}
                     onBlur={e => e.target.style.borderColor = '#EBEBEB'}
                   />
                 </div>
@@ -152,7 +148,7 @@ export default function ForgotPasswordPage() {
                   disabled={loading}
                   style={{
                     width: '100%', padding: '12px',
-                    background: loading ? '#93A3D4' : '#204ce5',
+                    background: loading ? '#F5B86C' : '#EE7D07',
                     color: '#fff', border: 'none', borderRadius: '8px',
                     fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
                     cursor: loading ? 'not-allowed' : 'pointer',
@@ -171,7 +167,7 @@ export default function ForgotPasswordPage() {
                     textAlign: 'center',
                     fontFamily: 'Open Sans, sans-serif',
                     fontSize: '13px',
-                    color: '#204ce5',
+                    color: '#EE7D07',
                     fontWeight: 600,
                     marginTop: '8px',
                   }}
