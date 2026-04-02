@@ -1,3 +1,5 @@
+import type { SituationLogement, SituationProfessionnelle } from '@/lib/documents-checklist'
+
 export type UserRole = 'admin' | 'collaborateur' | 'apporteur' | 'client'
 export type DossierStatut = 'en_cours' | 'refuse' | 'finance'
 
@@ -8,6 +10,9 @@ export interface Profile {
   prenom: string
   role: UserRole
   actif: boolean
+  record_id_crm: string | null
+  invitation_token: string | null
+  invitation_expire_at: string | null
   created_at: string
   updated_at: string
 }
@@ -20,6 +25,9 @@ export interface Dossier {
   client_id: string | null
   apporteur_id: string | null
   notes: string | null
+  situation_logement: SituationLogement | null
+  situation_professionnelle: SituationProfessionnelle | null
+  emprunt_a_deux: boolean
   created_at: string
   updated_at: string
   // relations
@@ -35,6 +43,7 @@ export interface Document {
   type_mime: string | null
   s3_key: string
   taille: number | null
+  categorie_document: string | null
   uploade_par: string | null
   created_at: string
   // relation

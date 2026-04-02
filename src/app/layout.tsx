@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const openSans = Open_Sans({
+  variable: "--font-open-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "GestDossier — Rachat de crédit",
-  description: "Système de gestion de dossiers",
+  title: "Crédit Unique — Gestion des dossiers",
+  description: "Plateforme de gestion des dossiers rachat de crédit",
 };
 
 export default function RootLayout({
@@ -18,8 +27,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full bg-gray-50">{children}</body>
+    <html lang="fr" className={`${poppins.variable} ${openSans.variable} h-full antialiased`}>
+      <body className="min-h-full" style={{ background: '#F5F5F5', fontFamily: 'var(--font-open-sans), Open Sans, sans-serif' }}>
+        {children}
+      </body>
     </html>
   );
 }

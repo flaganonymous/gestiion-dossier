@@ -49,38 +49,50 @@
 }
 
 :root {
+  /* Crédit Unique brand colors */
+  --cu-blue: #204ce5;
+  --cu-blue-dark: #001AB3;
+  --cu-blue-light: #527EFF;
+  --cu-blue-pale: #EEF2FF;
+  --cu-gold: #dd9933;
+  --cu-gold-light: #F5E6C8;
+  --cu-text: #112337;
+  --cu-text-muted: #585e6a;
+  --cu-gray-light: #F5F5F5;
+  --cu-gray-border: #EBEBEB;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #204ce5;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --muted: #F5F5F5;
+  --muted-foreground: #585e6a;
+  --accent: #EEF2FF;
+  --accent-foreground: #204ce5;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --border: #EBEBEB;
+  --input: #EBEBEB;
+  --ring: #204ce5;
+  --chart-1: #204ce5;
+  --chart-2: #527EFF;
+  --chart-3: #dd9933;
+  --chart-4: #001AB3;
+  --chart-5: #112337;
+  --radius: 0.5rem;
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-foreground: #112337;
+  --sidebar-primary: #204ce5;
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: #EEF2FF;
+  --sidebar-accent-foreground: #204ce5;
+  --sidebar-border: #EBEBEB;
+  --sidebar-ring: #204ce5;
 }
 
 .dark {
@@ -123,8 +135,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Open Sans', sans-serif;
+    color: #112337;
   }
   html {
     @apply font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    color: #112337;
   }
 }

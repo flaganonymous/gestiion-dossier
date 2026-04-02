@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { DossierStatut } from '@/lib/supabase/types'
+import { sendEmail } from '@/lib/email'
+
+const STATUT_LABELS: Record<string, string> = {
+  en_cours: 'En cours',
+  finance: 'Financé',
+  refuse: 'Refusé',
+}
 
 export async function PATCH(
   req: NextRequest,
@@ -37,6 +44,8 @@ export async function PATCH(
 
   if (!dossier) return NextResponse.json({ error: 'Dossier introuvable' }, { status: 404 })
 
+  const ancienStatut = dossier.statut
+
   // Mettre à jour le statut
   const { error } = await supabase
     .from('dossiers')
@@ -48,10 +57,80 @@ export async function PATCH(
   // Enregistrer dans l'historique
   await supabase.from('historique_statuts').insert({
     dossier_id: id,
-    ancien_statut: dossier.statut,
+    ancien_statut: ancienStatut,
     nouveau_statut: statut,
     modifie_par: user.id,
   })
+
+  // Envoyer les notifications email (non-bloquant)
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const lienDossier = `${appUrl}/dossiers/${id}`
+
+  ;(async () => {
+    try {
+      const admin = await createAdminClient()
+
+      // Récupérer le dossier complet avec client et apporteur
+      const { data: dossierComplet } = await admin
+        .from('dossiers')
+        .select('id, titre, client_id, apporteur_id')
+        .eq('id', id)
+        .single()
+
+      if (!dossierComplet) return
+
+      const emailVariables = {
+        titre_dossier: dossierComplet.titre || 'Sans titre',
+        ancien_statut: STATUT_LABELS[ancienStatut] || ancienStatut,
+        nouveau_statut: STATUT_LABELS[statut] || statut,
+        lien_dossier: lienDossier,
+      }
+
+      // Notifier le client
+      if (dossierComplet.client_id) {
+        const { data: clientProfile } = await admin
+          .from('profiles')
+          .select('email, prenom, nom')
+          .eq('id', dossierComplet.client_id)
+          .single()
+
+        if (clientProfile?.email) {
+          await sendEmail({
+            to: clientProfile.email,
+            templateSlug: 'statut_change',
+            variables: {
+              ...emailVariables,
+              prenom: clientProfile.prenom || '',
+              nom: clientProfile.nom || '',
+            },
+          })
+        }
+      }
+
+      // Notifier l'apporteur
+      if (dossierComplet.apporteur_id && dossierComplet.apporteur_id !== dossierComplet.client_id) {
+        const { data: apporteurProfile } = await admin
+          .from('profiles')
+          .select('email, prenom, nom')
+          .eq('id', dossierComplet.apporteur_id)
+          .single()
+
+        if (apporteurProfile?.email) {
+          await sendEmail({
+            to: apporteurProfile.email,
+            templateSlug: 'statut_change',
+            variables: {
+              ...emailVariables,
+              prenom: apporteurProfile.prenom || '',
+              nom: apporteurProfile.nom || '',
+            },
+          })
+        }
+      }
+    } catch (err) {
+      console.error('Erreur envoi email notification statut:', err)
+    }
+  })()
 
   return NextResponse.json({ ok: true })
 }
