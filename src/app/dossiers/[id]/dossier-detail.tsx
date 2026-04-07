@@ -43,6 +43,14 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   const canUpload = ['admin', 'collaborateur', 'apporteur', 'client'].includes(profile.role)
   const badge = STATUT_BADGE[statut] ?? STATUT_BADGE.en_cours
 
+  async function refreshDocuments() {
+    const res = await fetch(`/api/dossiers/${dossier.id}/documents`)
+    if (res.ok) {
+      const data = await res.json()
+      setDocuments(data.documents)
+    }
+  }
+
   async function handleStatutChange(newStatut: DossierStatut) {
     if (!canEdit) return
     setChangingStatut(true)
@@ -394,7 +402,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
               onDownload={handleDownload}
               onDelete={handleDelete}
               onPreview={handlePreview}
-              onUploadComplete={() => router.refresh()}
+              onUploadComplete={refreshDocuments}
               getFileIcon={getFileIcon}
               formatSize={formatSize}
             />
@@ -406,7 +414,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                   <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '15px', color: '#112337', marginBottom: '16px' }}>
                     Ajouter des documents
                   </h2>
-                  <UploadZone dossierId={dossier.id} onUploadComplete={() => router.refresh()} />
+                  <UploadZone dossierId={dossier.id} onUploadComplete={refreshDocuments} />
                 </div>
               )}
 
