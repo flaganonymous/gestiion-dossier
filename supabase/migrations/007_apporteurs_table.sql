@@ -6,7 +6,7 @@
 -- =============================================
 
 -- 1. Table apporteurs
-create table public.apporteurs (
+create table if not exists public.apporteurs (
   id uuid primary key default uuid_generate_v4(),
   nom text not null,
   prenom text not null,
@@ -17,6 +17,7 @@ create table public.apporteurs (
   updated_at timestamptz not null default now()
 );
 
+drop trigger if exists apporteurs_updated_at on public.apporteurs;
 create trigger apporteurs_updated_at
   before update on public.apporteurs
   for each row execute function update_updated_at();
@@ -57,12 +58,15 @@ update public.profiles
 set role = 'collaborateur', actif = false
 where role = 'apporteur';
 
--- 5. Supprimer les policies RLS référencant le rôle 'apporteur'
+-- 5. Supprimer toutes les policies RLS référencant la colonne profiles.role
+--    (elles bloquent le changement de type de la colonne)
 drop policy if exists "Apporteur voit ses dossiers" on public.dossiers;
 drop policy if exists "Apporteur peut créer un dossier" on public.dossiers;
 drop policy if exists "Documents visibles selon accès au dossier" on public.documents;
 drop policy if exists "Upload possible si accès au dossier" on public.documents;
 drop policy if exists "Historique visible selon accès au dossier" on public.historique_statuts;
+drop policy if exists "Admin accès smtp_config" on public.smtp_config;
+drop policy if exists "Admin accès email_templates" on public.email_templates;
 
 -- 6. Recréer l'enum user_role sans 'apporteur'
 alter table public.profiles alter column role drop default;
@@ -131,8 +135,20 @@ create policy "Historique visible selon accès au dossier" on public.historique_
     )
   );
 
--- 9. RLS sur apporteurs : seuls admin et collaborateur gèrent la table
+-- 9. Recréer les policies admin pour smtp_config + email_templates
+create policy "Admin accès smtp_config" on public.smtp_config
+  for all using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+create policy "Admin accès email_templates" on public.email_templates
+  for all using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- 10. RLS sur apporteurs : seuls admin et collaborateur gèrent la table
 alter table public.apporteurs enable row level security;
 
+drop policy if exists "Admin et collaborateur gèrent apporteurs" on public.apporteurs;
 create policy "Admin et collaborateur gèrent apporteurs" on public.apporteurs
   for all using (public.get_my_role() in ('admin', 'collaborateur'));
