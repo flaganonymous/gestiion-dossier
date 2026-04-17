@@ -65,6 +65,7 @@ drop policy if exists "Apporteur peut créer un dossier" on public.dossiers;
 drop policy if exists "Documents visibles selon accès au dossier" on public.documents;
 drop policy if exists "Upload possible si accès au dossier" on public.documents;
 drop policy if exists "Historique visible selon accès au dossier" on public.historique_statuts;
+drop policy if exists "Insertion historique : admin/collaborateur" on public.historique_statuts;
 drop policy if exists "Admin accès smtp_config" on public.smtp_config;
 drop policy if exists "Admin accès email_templates" on public.email_templates;
 
@@ -134,6 +135,9 @@ create policy "Historique visible selon accès au dossier" on public.historique_
       )
     )
   );
+
+create policy "Insertion historique : admin/collaborateur" on public.historique_statuts
+  for insert with check (public.get_my_role() in ('admin', 'collaborateur'));
 
 -- 9. Recréer les policies admin pour smtp_config + email_templates
 create policy "Admin accès smtp_config" on public.smtp_config
