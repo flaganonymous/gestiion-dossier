@@ -5,8 +5,9 @@ import { createClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/navbar'
 import { Profile, Apporteur } from '@/lib/supabase/types'
 import { SITUATION_LOGEMENT_LABELS, SITUATION_PROFESSIONNELLE_LABELS } from '@/lib/documents-checklist'
-import { Loader2, ArrowLeft, FolderPlus } from 'lucide-react'
+import { Loader2, ArrowLeft, FolderPlus, UserPlus } from 'lucide-react'
 import Link from 'next/link'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 export default function NouveauDossierPage() {
   const supabase = createClient()
@@ -26,6 +27,36 @@ export default function NouveauDossierPage() {
   const [loading, setLoading] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
   const [error, setError] = useState('')
+
+  // Création client inline
+  const [clientDialogOpen, setClientDialogOpen] = useState(false)
+  const [newClient, setNewClient] = useState({ prenom: '', nom: '', email: '' })
+  const [creatingClient, setCreatingClient] = useState(false)
+  const [clientError, setClientError] = useState('')
+
+  async function handleCreateClient(e: React.FormEvent) {
+    e.preventDefault()
+    setClientError('')
+    setCreatingClient(true)
+    try {
+      const res = await fetch('/api/clients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newClient),
+      })
+      const data = await res.json()
+      if (!res.ok) { setClientError(data.error || 'Erreur'); return }
+      setClients(prev => {
+        if (prev.some(c => c.id === data.client.id)) return prev
+        return [...prev, data.client as Profile]
+      })
+      setClientId(data.client.id)
+      setNewClient({ prenom: '', nom: '', email: '' })
+      setClientDialogOpen(false)
+    } finally {
+      setCreatingClient(false)
+    }
+  }
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -137,17 +168,94 @@ export default function NouveauDossierPage() {
               </select>
             </div>
 
-            {clients.length > 0 && (
-              <div>
-                <label style={labelStyle}>Client</label>
-                <select value={clientId} onChange={e => setClientId(e.target.value)} style={inputStyle}>
+            <div>
+              <label style={labelStyle}>Client</label>
+              <div className="flex gap-2">
+                <select value={clientId} onChange={e => setClientId(e.target.value)} style={{ ...inputStyle, flex: 1 }}>
                   <option value="">Sélectionner un client...</option>
                   {clients.map(c => (
                     <option key={c.id} value={c.id}>{c.prenom} {c.nom} — {c.email}</option>
                   ))}
                 </select>
+                <button
+                  type="button"
+                  onClick={() => { setClientError(''); setClientDialogOpen(true) }}
+                  title="Créer un client"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '10px 14px', background: '#FFF5EB', color: '#EE7D07',
+                    border: '1.5px solid #EBEBEB', borderRadius: '8px',
+                    fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
+                    cursor: 'pointer', whiteSpace: 'nowrap',
+                  }}
+                >
+                  <UserPlus className="h-4 w-4" />
+                  Nouveau
+                </button>
               </div>
-            )}
+            </div>
+
+            <Dialog open={clientDialogOpen} onOpenChange={setClientDialogOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle style={{ fontFamily: 'Poppins, sans-serif', color: '#112337' }}>
+                    Nouveau client
+                  </DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleCreateClient} className="space-y-4 mt-2">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label style={labelStyle}>Prénom *</label>
+                      <input
+                        value={newClient.prenom}
+                        onChange={e => setNewClient(p => ({ ...p, prenom: e.target.value }))}
+                        required style={inputStyle} placeholder="Jean"
+                      />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Nom *</label>
+                      <input
+                        value={newClient.nom}
+                        onChange={e => setNewClient(p => ({ ...p, nom: e.target.value }))}
+                        required style={inputStyle} placeholder="Dupont"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Email *</label>
+                    <input
+                      type="email"
+                      value={newClient.email}
+                      onChange={e => setNewClient(p => ({ ...p, email: e.target.value }))}
+                      required style={inputStyle} placeholder="jean.dupont@exemple.fr"
+                    />
+                    <p style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '12px', color: '#585e6a', marginTop: '6px' }}>
+                      Un email d&apos;invitation sera envoyé au client pour activer son compte.
+                    </p>
+                  </div>
+
+                  {clientError && (
+                    <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '8px', padding: '10px 14px', fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#DC2626' }}>
+                      {clientError}
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 pt-2">
+                    <button type="submit" disabled={creatingClient}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: creatingClient ? '#F5B86C' : '#EE7D07', color: '#fff', border: 'none', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', cursor: creatingClient ? 'not-allowed' : 'pointer' }}
+                    >
+                      {creatingClient && <Loader2 className="h-4 w-4 animate-spin" />}
+                      Créer le client
+                    </button>
+                    <button type="button" onClick={() => setClientDialogOpen(false)}
+                      style={{ padding: '10px 20px', background: '#F5F5F5', color: '#112337', border: 'none', borderRadius: '8px', fontFamily: 'Open Sans, sans-serif', fontSize: '14px', cursor: 'pointer' }}
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
 
             {apporteurs.length > 0 && (
               <div>
