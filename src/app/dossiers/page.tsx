@@ -27,7 +27,6 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
     .select(`id, titre, annee, statut, created_at, updated_at, client:client_id(nom, prenom), apporteur:apporteur_id(nom, prenom)`)
     .order('updated_at', { ascending: false })
 
-  if (profile.role === 'apporteur') query = query.eq('apporteur_id', profile.id)
   if (profile.role === 'client') query = query.eq('client_id', profile.id)
   if (params.statut && ['en_cours', 'refuse', 'finance'].includes(params.statut)) query = query.eq('statut', params.statut)
   if (params.annee) query = query.eq('annee', parseInt(params.annee))
@@ -69,7 +68,7 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
                 </button>
               </a>
             )}
-            {['admin', 'collaborateur', 'apporteur'].includes(profile.role) && (
+            {['admin', 'collaborateur'].includes(profile.role) && (
               <Link href="/dossiers/nouveau">
                 <button style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
@@ -175,7 +174,7 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
             <p style={{ fontFamily: 'Open Sans, sans-serif', color: '#585e6a', fontSize: '15px', marginBottom: '16px' }}>
               Aucun dossier trouvé
             </p>
-            {['admin', 'collaborateur', 'apporteur'].includes(profile.role) && (
+            {['admin', 'collaborateur'].includes(profile.role) && (
               <Link href="/dossiers/nouveau">
                 <button style={{
                   padding: '10px 24px', background: '#EE7D07', color: '#fff',

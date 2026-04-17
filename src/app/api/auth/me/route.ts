@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import type { Apporteur, Profile } from '@/lib/supabase/types'
 
 export async function GET() {
   const supabase = await createClient()
@@ -21,18 +22,14 @@ export async function GET() {
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
   }
 
-  // Charger les listes selon le rôle
-  let clients: any[] = []
-  let apporteurs: any[] = []
+  let clients: Profile[] = []
+  let apporteurs: Apporteur[] = []
 
   if (['admin', 'collaborateur'].includes(profile.role)) {
     const { data: c } = await admin.from('profiles').select('*').eq('role', 'client').eq('actif', true)
-    const { data: a } = await admin.from('profiles').select('*').eq('role', 'apporteur').eq('actif', true)
+    const { data: a } = await admin.from('apporteurs').select('*').eq('actif', true).order('nom')
     clients = c ?? []
     apporteurs = a ?? []
-  } else if (profile.role === 'apporteur') {
-    const { data: c } = await admin.from('profiles').select('*').eq('role', 'client').eq('actif', true)
-    clients = c ?? []
   }
 
   return NextResponse.json({ profile, clients, apporteurs })

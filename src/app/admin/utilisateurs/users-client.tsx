@@ -9,7 +9,6 @@ import { Plus, UserCheck, UserX, Loader2, Users } from 'lucide-react'
 const ROLE_COLORS: Record<UserRole, { bg: string; color: string }> = {
   admin: { bg: '#EDE9FE', color: '#7C3AED' },
   collaborateur: { bg: '#FFF5EB', color: '#EE7D07' },
-  apporteur: { bg: '#DCFCE7', color: '#16a34a' },
   client: { bg: '#F5F5F5', color: '#585e6a' },
 }
 
@@ -18,7 +17,7 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState('')
-  const [form, setForm] = useState({ email: '', password: '', nom: '', prenom: '', role: 'apporteur' as UserRole })
+  const [form, setForm] = useState({ email: '', password: '', nom: '', prenom: '', role: 'collaborateur' as UserRole })
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
@@ -31,7 +30,7 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
     if (!res.ok) { setError(data.error); setLoading(null); return }
     const listRes = await fetch('/api/admin/users')
     setUsers(await listRes.json())
-    setForm({ email: '', password: '', nom: '', prenom: '', role: 'apporteur' })
+    setForm({ email: '', password: '', nom: '', prenom: '', role: 'collaborateur' })
     setDialogOpen(false)
     setLoading(null)
   }
@@ -57,7 +56,6 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
   const grouped: Record<UserRole, Profile[]> = {
     admin: users.filter(u => u.role === 'admin'),
     collaborateur: users.filter(u => u.role === 'collaborateur'),
-    apporteur: users.filter(u => u.role === 'apporteur'),
     client: users.filter(u => u.role === 'client'),
   }
 
@@ -140,7 +138,6 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
                 >
                   <option value="admin">Administrateur</option>
                   <option value="collaborateur">Collaborateur</option>
-                  <option value="apporteur">Apporteur d'affaire</option>
                   <option value="client">Client</option>
                 </select>
               </div>
@@ -217,7 +214,6 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
                       >
                         <option value="admin">Admin</option>
                         <option value="collaborateur">Collaborateur</option>
-                        <option value="apporteur">Apporteur</option>
                         <option value="client">Client</option>
                       </select>
 

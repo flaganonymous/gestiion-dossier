@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { LayoutDashboard, FolderKanban, Users, LogOut, ChevronDown, UserCircle, Mail, FolderUp } from 'lucide-react'
+import { LayoutDashboard, FolderKanban, Users, LogOut, ChevronDown, UserCircle, Mail, FolderUp, Briefcase } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {
@@ -38,12 +38,13 @@ export function Navbar({ profile }: NavbarProps) {
     },
     {
       href: '/dossiers',
-      label: ['client', 'apporteur'].includes(profile.role) ? 'Mes dossiers' : 'Dossiers',
+      label: profile.role === 'client' ? 'Mes dossiers' : 'Dossiers',
       icon: FolderKanban
     },
     ...(profile.role === 'admin'
       ? [
           { href: '/admin/utilisateurs', label: 'Utilisateurs', icon: Users },
+          { href: '/admin/apporteurs', label: 'Apporteurs', icon: Briefcase },
           { href: '/admin/email', label: 'Emails', icon: Mail },
           { href: '/admin/import', label: 'Import', icon: FolderUp },
         ]

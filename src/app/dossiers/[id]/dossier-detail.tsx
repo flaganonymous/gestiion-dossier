@@ -40,7 +40,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const canEdit = ['admin', 'collaborateur'].includes(profile.role)
-  const canUpload = ['admin', 'collaborateur', 'apporteur', 'client'].includes(profile.role)
+  const canUpload = ['admin', 'collaborateur', 'client'].includes(profile.role)
   const badge = STATUT_BADGE[statut] ?? STATUT_BADGE.en_cours
 
   async function refreshDocuments() {

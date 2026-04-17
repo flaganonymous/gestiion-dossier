@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Navbar } from '@/components/navbar'
-import { Profile } from '@/lib/supabase/types'
+import { Profile, Apporteur } from '@/lib/supabase/types'
 import { SITUATION_LOGEMENT_LABELS, SITUATION_PROFESSIONNELLE_LABELS } from '@/lib/documents-checklist'
 import { Loader2, ArrowLeft, FolderPlus } from 'lucide-react'
 import Link from 'next/link'
@@ -13,7 +13,7 @@ export default function NouveauDossierPage() {
 
   const [profile, setProfile] = useState<Profile | null>(null)
   const [clients, setClients] = useState<Profile[]>([])
-  const [apporteurs, setApporteurs] = useState<Profile[]>([])
+  const [apporteurs, setApporteurs] = useState<Apporteur[]>([])
 
   const [titre, setTitre] = useState('')
   const [annee, setAnnee] = useState(new Date().getFullYear())
@@ -34,7 +34,6 @@ export default function NouveauDossierPage() {
         setProfile(data.profile)
         setClients(data.clients)
         setApporteurs(data.apporteurs)
-        if (data.profile.role === 'apporteur') setApporteurId(data.profile.id)
       })
       .catch(() => { window.location.href = '/login' })
       .finally(() => setPageLoading(false))
@@ -150,11 +149,11 @@ export default function NouveauDossierPage() {
               </div>
             )}
 
-            {apporteurs.length > 0 && profile.role !== 'apporteur' && (
+            {apporteurs.length > 0 && (
               <div>
-                <label style={labelStyle}>Apporteur d'affaire</label>
+                <label style={labelStyle}>Apporteur d&apos;affaires (optionnel)</label>
                 <select value={apporteurId} onChange={e => setApporteurId(e.target.value)} style={inputStyle}>
-                  <option value="">Sélectionner un apporteur...</option>
+                  <option value="">Aucun apporteur</option>
                   {apporteurs.map(a => (
                     <option key={a.id} value={a.id}>{a.prenom} {a.nom}</option>
                   ))}

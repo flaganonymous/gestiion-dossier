@@ -107,22 +107,22 @@ export async function PATCH(
         }
       }
 
-      // Notifier l'apporteur
-      if (dossierComplet.apporteur_id && dossierComplet.apporteur_id !== dossierComplet.client_id) {
-        const { data: apporteurProfile } = await admin
-          .from('profiles')
+      // Notifier l'apporteur (si email renseigné dans la table apporteurs)
+      if (dossierComplet.apporteur_id) {
+        const { data: apporteur } = await admin
+          .from('apporteurs')
           .select('email, prenom, nom')
           .eq('id', dossierComplet.apporteur_id)
           .single()
 
-        if (apporteurProfile?.email) {
+        if (apporteur?.email) {
           await sendEmail({
-            to: apporteurProfile.email,
+            to: apporteur.email,
             templateSlug: 'statut_change',
             variables: {
               ...emailVariables,
-              prenom: apporteurProfile.prenom || '',
-              nom: apporteurProfile.nom || '',
+              prenom: apporteur.prenom || '',
+              nom: apporteur.nom || '',
             },
           })
         }

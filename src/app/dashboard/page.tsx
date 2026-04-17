@@ -24,8 +24,7 @@ export default async function DashboardPage() {
     .select(`id, titre, annee, statut, created_at, updated_at, client:client_id(nom, prenom), apporteur:apporteur_id(nom, prenom)`)
     .order('updated_at', { ascending: false })
 
-  if (profile.role === 'apporteur') query = query.eq('apporteur_id', profile.id)
-  else if (profile.role === 'client') query = query.eq('client_id', profile.id)
+  if (profile.role === 'client') query = query.eq('client_id', profile.id)
 
   const { data: dossiers = [] } = await query.limit(50)
 
@@ -168,7 +167,7 @@ export default async function DashboardPage() {
               Voici un aperçu de votre activité
             </p>
           </div>
-          {['admin', 'collaborateur', 'apporteur'].includes(profile.role) && (
+          {['admin', 'collaborateur'].includes(profile.role) && (
             <Link href="/dossiers/nouveau">
               <button style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
@@ -233,7 +232,7 @@ export default async function DashboardPage() {
               <p style={{ fontFamily: 'Open Sans, sans-serif', color: '#585e6a', fontSize: '14px' }}>
                 Aucun dossier pour le moment
               </p>
-              {['admin', 'collaborateur', 'apporteur'].includes(profile.role) && (
+              {['admin', 'collaborateur'].includes(profile.role) && (
                 <Link href="/dossiers/nouveau">
                   <button style={{
                     marginTop: '16px', padding: '10px 20px',

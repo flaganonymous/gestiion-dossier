@@ -1,6 +1,6 @@
 import type { SituationLogement, SituationProfessionnelle } from '@/lib/documents-checklist'
 
-export type UserRole = 'admin' | 'collaborateur' | 'apporteur' | 'client'
+export type UserRole = 'admin' | 'collaborateur' | 'client'
 export type DossierStatut = 'en_cours' | 'refuse' | 'finance'
 
 export interface Profile {
@@ -13,6 +13,17 @@ export interface Profile {
   record_id_crm: string | null
   invitation_token: string | null
   invitation_expire_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface Apporteur {
+  id: string
+  nom: string
+  prenom: string
+  email: string | null
+  telephone: string | null
+  actif: boolean
   created_at: string
   updated_at: string
 }
@@ -32,7 +43,7 @@ export interface Dossier {
   updated_at: string
   // relations
   client?: Profile | null
-  apporteur?: Profile | null
+  apporteur?: Apporteur | null
   documents?: Document[]
 }
 
@@ -76,6 +87,5 @@ export const STATUT_COLORS: Record<DossierStatut, string> = {
 export const ROLE_LABELS: Record<UserRole, string> = {
   admin: 'Administrateur',
   collaborateur: 'Collaborateur',
-  apporteur: "Apporteur d'affaire",
   client: 'Client',
 }
