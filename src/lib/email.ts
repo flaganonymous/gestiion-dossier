@@ -58,34 +58,69 @@ function createTransporter(config: SmtpConfig) {
   })
 }
 
+async function logEmail(entry: {
+  templateSlug: string
+  to: string
+  sujet: string | null
+  dossierId?: string | null
+  success: boolean
+  erreur?: string | null
+}) {
+  try {
+    const admin = await createAdminClient()
+    await admin.from('email_logs').insert({
+      template_slug: entry.templateSlug,
+      destinataire: entry.to,
+      sujet: entry.sujet,
+      dossier_id: entry.dossierId ?? null,
+      success: entry.success,
+      erreur: entry.erreur ?? null,
+    })
+  } catch (err) {
+    console.error('email_logs insert failed:', err)
+  }
+}
+
 export async function sendEmail(params: {
   to: string
   templateSlug: string
   variables: Record<string, string>
+  dossierId?: string | null
 }): Promise<{ success: boolean; error?: string }> {
+  let renderedSubject: string | null = null
   try {
     const config = await getActiveSmtpConfig()
-    if (!config) return { success: false, error: 'Aucune configuration SMTP active' }
+    if (!config) {
+      const error = 'Aucune configuration SMTP active'
+      await logEmail({ templateSlug: params.templateSlug, to: params.to, sujet: null, dossierId: params.dossierId, success: false, erreur: error })
+      return { success: false, error }
+    }
 
     const template = await getEmailTemplate(params.templateSlug)
-    if (!template) return { success: false, error: `Template "${params.templateSlug}" introuvable` }
+    if (!template) {
+      const error = `Template "${params.templateSlug}" introuvable`
+      await logEmail({ templateSlug: params.templateSlug, to: params.to, sujet: null, dossierId: params.dossierId, success: false, erreur: error })
+      return { success: false, error }
+    }
 
     const transporter = createTransporter(config)
-    const subject = replaceVariables(template.sujet, params.variables)
+    renderedSubject = replaceVariables(template.sujet, params.variables)
     const html = replaceVariables(template.corps_html, params.variables)
     const text = replaceVariables(template.corps_texte, params.variables)
 
     await transporter.sendMail({
       from: `"${config.from_name}" <${config.from_email}>`,
       to: params.to,
-      subject,
+      subject: renderedSubject,
       html,
       text,
     })
 
+    await logEmail({ templateSlug: params.templateSlug, to: params.to, sujet: renderedSubject, dossierId: params.dossierId, success: true })
     return { success: true }
   } catch (err: any) {
     console.error('Email send error:', err)
+    await logEmail({ templateSlug: params.templateSlug, to: params.to, sujet: renderedSubject, dossierId: params.dossierId, success: false, erreur: err.message })
     return { success: false, error: err.message }
   }
 }

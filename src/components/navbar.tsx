@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { LayoutDashboard, FolderKanban, Users, LogOut, ChevronDown, UserCircle, Mail, FolderUp, Briefcase } from 'lucide-react'
+import { LayoutDashboard, FolderKanban, Users, LogOut, ChevronDown, UserCircle, Mail, FolderUp, Briefcase, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {
@@ -43,6 +43,7 @@ export function Navbar({ profile }: NavbarProps) {
     },
     ...(profile.role === 'admin'
       ? [
+          { href: '/admin/statistiques', label: 'Statistiques', icon: BarChart3 },
           { href: '/admin/utilisateurs', label: 'Utilisateurs', icon: Users },
           { href: '/admin/apporteurs', label: 'Apporteurs', icon: Briefcase },
           { href: '/admin/email', label: 'Emails', icon: Mail },

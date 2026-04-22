@@ -15,6 +15,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const statut = searchParams.get('statut')
   const annee = searchParams.get('annee')
+  const apporteurId = searchParams.get('apporteur_id')
+  const q = searchParams.get('q')
 
   let query = admin
     .from('dossiers')
@@ -23,6 +25,11 @@ export async function GET(req: NextRequest) {
 
   if (statut) query = query.eq('statut', statut)
   if (annee) query = query.eq('annee', parseInt(annee))
+  if (q) query = query.ilike('titre', `%${q}%`)
+  if (apporteurId) {
+    if (apporteurId === 'none') query = query.is('apporteur_id', null)
+    else query = query.eq('apporteur_id', apporteurId)
+  }
 
   const { data: dossiers = [] } = await query
 

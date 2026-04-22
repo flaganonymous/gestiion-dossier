@@ -15,7 +15,7 @@ const STATUT_BADGE: Record<string, { bg: string; color: string }> = {
   refuse: { bg: '#FEF2F2', color: '#dc2626' },
 }
 
-interface SearchParams { statut?: string; annee?: string; q?: string }
+interface SearchParams { statut?: string; annee?: string; q?: string; apporteur_id?: string }
 
 export default async function DossiersPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const params = await searchParams
@@ -31,10 +31,18 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
   if (params.statut && ['en_cours', 'refuse', 'finance'].includes(params.statut)) query = query.eq('statut', params.statut)
   if (params.annee) query = query.eq('annee', parseInt(params.annee))
   if (params.q) query = query.ilike('titre', `%${params.q}%`)
+  if (params.apporteur_id) {
+    if (params.apporteur_id === 'none') query = query.is('apporteur_id', null)
+    else query = query.eq('apporteur_id', params.apporteur_id)
+  }
 
   const { data: dossiers = [] } = await query
   const annees = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
   const isClient = profile.role === 'client'
+
+  const { data: apporteurs = [] } = isClient
+    ? { data: [] as { id: string; nom: string; prenom: string }[] }
+    : await supabase.from('apporteurs').select('id, nom, prenom').eq('actif', true).order('nom')
 
   return (
     <div style={{ minHeight: '100vh', background: '#F5F5F5' }}>
@@ -54,8 +62,14 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
             </p>
           </div>
           <div className="flex items-center gap-3">
-            {['admin', 'collaborateur'].includes(profile.role) && (
-              <a href={`/api/dossiers/export?${params.statut ? `statut=${params.statut}&` : ''}${params.annee ? `annee=${params.annee}` : ''}`}>
+            {['admin', 'collaborateur'].includes(profile.role) && (() => {
+              const exportQs = new URLSearchParams()
+              if (params.statut) exportQs.set('statut', params.statut)
+              if (params.annee) exportQs.set('annee', params.annee)
+              if (params.q) exportQs.set('q', params.q)
+              if (params.apporteur_id) exportQs.set('apporteur_id', params.apporteur_id)
+              return (
+              <a href={`/api/dossiers/export?${exportQs}`}>
                 <button style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
                   background: '#fff', color: '#585e6a', border: '1.5px solid #EBEBEB',
@@ -67,7 +81,8 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
                   Export CSV
                 </button>
               </a>
-            )}
+              )
+            })()}
             {['admin', 'collaborateur'].includes(profile.role) && (
               <Link href="/dossiers/nouveau">
                 <button style={{
@@ -91,7 +106,9 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
           <div className="flex flex-wrap gap-3 items-center">
 
             {/* Recherche */}
-            <form method="GET" className="flex items-center gap-2">
+            <form method="GET" className="flex items-center gap-2 flex-wrap">
+              {params.statut && <input type="hidden" name="statut" value={params.statut} />}
+              {params.annee && <input type="hidden" name="annee" value={params.annee} />}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: '#585e6a' }} />
                 <input
@@ -106,6 +123,21 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
                   }}
                 />
               </div>
+              <select
+                name="apporteur_id"
+                defaultValue={params.apporteur_id ?? ''}
+                style={{
+                  padding: '8px 12px', border: '1.5px solid #EBEBEB', borderRadius: '8px',
+                  background: '#fff', fontFamily: 'Open Sans, sans-serif', fontSize: '13px',
+                  color: '#112337', outline: 'none', cursor: 'pointer',
+                }}
+              >
+                <option value="">Tous les apporteurs</option>
+                <option value="none">Sans apporteur</option>
+                {apporteurs?.map(a => (
+                  <option key={a.id} value={a.id}>{a.prenom} {a.nom}</option>
+                ))}
+              </select>
               <button type="submit" style={{
                 padding: '8px 14px', border: '1.5px solid #EBEBEB', borderRadius: '8px',
                 background: '#fff', fontFamily: 'Open Sans, sans-serif', fontSize: '13px',
@@ -126,8 +158,14 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
                 { value: 'refuse', label: 'Refusés' },
               ].map(f => {
                 const active = (params.statut ?? '') === f.value
+                const qs = new URLSearchParams()
+                if (f.value) qs.set('statut', f.value)
+                if (params.annee) qs.set('annee', params.annee)
+                if (params.q) qs.set('q', params.q)
+                if (params.apporteur_id) qs.set('apporteur_id', params.apporteur_id)
+                const href = qs.toString() ? `/dossiers?${qs}` : '/dossiers'
                 return (
-                  <Link key={f.value} href={f.value ? `/dossiers?statut=${f.value}` : '/dossiers'}>
+                  <Link key={f.value} href={href}>
                     <span style={{
                       display: 'inline-block', padding: '6px 14px', borderRadius: '20px',
                       fontFamily: 'Open Sans, sans-serif', fontSize: '13px', fontWeight: active ? 600 : 400,
@@ -148,8 +186,13 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
             <div className="flex gap-2 flex-wrap">
               {annees.map(annee => {
                 const active = params.annee === String(annee)
+                const qs = new URLSearchParams()
+                qs.set('annee', String(annee))
+                if (params.statut) qs.set('statut', params.statut)
+                if (params.q) qs.set('q', params.q)
+                if (params.apporteur_id) qs.set('apporteur_id', params.apporteur_id)
                 return (
-                  <Link key={annee} href={`/dossiers?annee=${annee}${params.statut ? `&statut=${params.statut}` : ''}`}>
+                  <Link key={annee} href={`/dossiers?${qs}`}>
                     <span style={{
                       display: 'inline-block', padding: '6px 14px', borderRadius: '20px',
                       fontFamily: 'Open Sans, sans-serif', fontSize: '13px', fontWeight: active ? 600 : 400,
