@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { UserRole } from '@/lib/supabase/types'
+import crypto from 'crypto'
 
 // Créer un utilisateur
 export async function POST(req: NextRequest) {
@@ -15,21 +15,79 @@ export async function POST(req: NextRequest) {
 
   const { email, password, nom, prenom, role } = await req.json()
 
-  if (!email || !password || !nom || !prenom || !role) {
-    return NextResponse.json({ error: 'Tous les champs sont requis' }, { status: 400 })
+  if (!email || !nom || !prenom || !role) {
+    return NextResponse.json({ error: 'Email, prenom, nom et role sont requis' }, { status: 400 })
+  }
+
+  // Pour les admins/collaborateurs, un mot de passe est requis.
+  // Pour les clients, le mot de passe est defini via le lien d'invitation,
+  // donc on genere un mot de passe aleatoire et on envoie l'email.
+  const isClient = role === 'client'
+  if (!isClient && !password) {
+    return NextResponse.json({ error: 'Mot de passe requis pour les admins et collaborateurs' }, { status: 400 })
   }
 
   const adminClient = await createAdminClient()
+  const cleanEmail = String(email).trim().toLowerCase()
+  const effectivePassword = isClient ? crypto.randomUUID() : password
+
   const { data, error } = await adminClient.auth.admin.createUser({
-    email,
-    password,
+    email: cleanEmail,
+    password: effectivePassword,
     user_metadata: { nom, prenom, role },
     email_confirm: true,
   })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  const newUserId = data.user?.id
+  if (!newUserId) return NextResponse.json({ error: 'Creation echouee' }, { status: 500 })
 
-  return NextResponse.json({ id: data.user?.id })
+  // Pour les clients : on met actif=false + token d'invitation et on envoie
+  // l'email. Le client definira son mot de passe via le lien.
+  if (isClient) {
+    const invitationToken = crypto.randomUUID()
+    const expireAt = new Date(Date.now() + 72 * 60 * 60 * 1000)
+
+    const { error: updateErr } = await adminClient
+      .from('profiles')
+      .update({
+        nom: String(nom).trim(),
+        prenom: String(prenom).trim(),
+        role: 'client',
+        actif: false,
+        invitation_token: invitationToken,
+        invitation_expire_at: expireAt.toISOString(),
+      })
+      .eq('id', newUserId)
+
+    if (updateErr) {
+      return NextResponse.json({ error: updateErr.message }, { status: 500 })
+    }
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const invitationUrl = `${appUrl}/invitation/${invitationToken}`
+
+    const { sendEmail } = await import('@/lib/email')
+    const result = await sendEmail({
+      to: cleanEmail,
+      templateSlug: 'invitation_client',
+      variables: {
+        prenom: String(prenom).trim(),
+        nom: String(nom).trim(),
+        email: cleanEmail,
+        lien_invitation: invitationUrl,
+      },
+    })
+
+    return NextResponse.json({
+      id: newUserId,
+      invitation_url: invitationUrl,
+      email_sent: result.success,
+      email_error: result.success ? null : (result.error ?? 'Envoi echoue'),
+    })
+  }
+
+  return NextResponse.json({ id: newUserId })
 }
 
 // Lister les utilisateurs

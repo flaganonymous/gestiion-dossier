@@ -20,6 +20,7 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState('')
+  const [createFlash, setCreateFlash] = useState<{ kind: FlashKind; msg: string } | null>(null)
   const [form, setForm] = useState({ email: '', password: '', nom: '', prenom: '', role: 'collaborateur' as UserRole })
 
   // Edit dialog state
@@ -34,17 +35,38 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    setCreateFlash(null)
     setLoading('create')
+
+    // Pour un client, le mot de passe est defini via le lien d'invitation.
+    const payload: Record<string, unknown> = {
+      email: form.email, nom: form.nom, prenom: form.prenom, role: form.role,
+    }
+    if (form.role !== 'client') payload.password = form.password
+
     const res = await fetch('/api/admin/users', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
     })
     const data = await res.json()
     if (!res.ok) { setError(data.error); setLoading(null); return }
+
     const listRes = await fetch('/api/admin/users')
     setUsers(await listRes.json())
+
+    if (form.role === 'client') {
+      if (data.email_sent) {
+        setCreateFlash({ kind: 'success', msg: 'Client cree et email d\'invitation envoye' })
+      } else {
+        setCreateFlash({ kind: 'error', msg: `Client cree mais email non envoye : ${data.email_error ?? 'raison inconnue'}` })
+      }
+    } else {
+      setCreateFlash({ kind: 'success', msg: 'Compte cree' })
+    }
+
     setForm({ email: '', password: '', nom: '', prenom: '', role: 'collaborateur' })
-    setDialogOpen(false)
     setLoading(null)
+    // On ferme le dialog apres 1.5s pour laisser voir le feedback
+    setTimeout(() => { setDialogOpen(false); setCreateFlash(null) }, 1800)
   }
 
   async function toggleActif(user: Profile) {
@@ -199,16 +221,6 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
 
               <div>
                 <label style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '13px', color: '#112337', display: 'block', marginBottom: '6px' }}>
-                  Mot de passe temporaire
-                </label>
-                <input type="password" value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
-                  minLength={8} required
-                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #EBEBEB', borderRadius: '8px', fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#112337', outline: 'none' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '13px', color: '#112337', display: 'block', marginBottom: '6px' }}>
                   Rôle
                 </label>
                 <select value={form.role} onChange={e => setForm(p => ({ ...p, role: e.target.value as UserRole }))}
@@ -219,6 +231,39 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
                   <option value="client">Client</option>
                 </select>
               </div>
+
+              {form.role === 'client' ? (
+                <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '8px', padding: '10px 14px', fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#1e40af', display: 'flex', gap: '8px' }}>
+                  <Mail className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                  <span>Un email d'invitation sera envoye automatiquement. Le client definira son mot de passe via le lien (valable 72h).</span>
+                </div>
+              ) : (
+                <div>
+                  <label style={{ fontFamily: 'Open Sans, sans-serif', fontWeight: 600, fontSize: '13px', color: '#112337', display: 'block', marginBottom: '6px' }}>
+                    Mot de passe temporaire
+                  </label>
+                  <input type="password" value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
+                    minLength={8} required
+                    style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #EBEBEB', borderRadius: '8px', fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#112337', outline: 'none' }}
+                  />
+                </div>
+              )}
+
+              {createFlash && (
+                <div style={{
+                  background: createFlash.kind === 'success' ? '#DCFCE7' : '#FEF2F2',
+                  border: createFlash.kind === 'success' ? '1px solid #86EFAC' : '1px solid #FECACA',
+                  borderRadius: '8px', padding: '10px 14px',
+                  fontFamily: 'Open Sans, sans-serif', fontSize: '13px',
+                  color: createFlash.kind === 'success' ? '#166534' : '#DC2626',
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                }}>
+                  {createFlash.kind === 'success'
+                    ? <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+                    : <AlertCircle className="h-4 w-4 flex-shrink-0" />}
+                  <span>{createFlash.msg}</span>
+                </div>
+              )}
 
               {error && (
                 <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '8px', padding: '10px 14px', fontFamily: 'Open Sans, sans-serif', fontSize: '13px', color: '#DC2626' }}>
