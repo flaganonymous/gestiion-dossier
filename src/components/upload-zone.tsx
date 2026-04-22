@@ -27,21 +27,49 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+    // HEIC (iPhone) : le navigateur ne renseigne pas toujours le type,
+    // on gere aussi la detection par extension dans isHeic() plus bas.
+    'image/heic', 'image/heif',
   ]
   const MAX_SIZE = 20 * 1024 * 1024
+
+  function isHeic(file: File) {
+    const type = (file.type || '').toLowerCase()
+    if (type === 'image/heic' || type === 'image/heif') return true
+    const name = file.name.toLowerCase()
+    return name.endsWith('.heic') || name.endsWith('.heif')
+  }
+
+  async function convertHeicToJpeg(file: File): Promise<File> {
+    // heic2any n'existe que cote navigateur : import dynamique.
+    const heic2any = (await import('heic2any')).default
+    const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 })
+    const jpegBlob = Array.isArray(blob) ? blob[0] : blob
+    const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg')
+    return new File([jpegBlob], newName, { type: 'image/jpeg' })
+  }
 
   async function uploadFile(uf: UploadFile, index: number) {
     setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'uploading' } : f))
     try {
+      // Conversion HEIC -> JPEG cote navigateur avant upload.
+      // Sinon Chrome/Firefox ne peuvent pas afficher le fichier et
+      // pdf-lib ne peut pas l'integrer dans l'export banque.
+      let fileToUpload = uf.file
+      if (isHeic(uf.file)) {
+        fileToUpload = await convertHeicToJpeg(uf.file)
+        setFiles(prev => prev.map((f, i) => i === index ? { ...f, file: fileToUpload } : f))
+      }
+
       const res = await fetch('/api/documents/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dossierId, nomFichier: uf.file.name, contentType: uf.file.type, taille: uf.file.size, categorieDocument }),
+        body: JSON.stringify({ dossierId, nomFichier: fileToUpload.name, contentType: fileToUpload.type, taille: fileToUpload.size, categorieDocument }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Erreur serveur')
       const { uploadUrl } = data
-      const s3Res = await fetch(uploadUrl, { method: 'PUT', body: uf.file, headers: { 'Content-Type': uf.file.type } })
+      const s3Res = await fetch(uploadUrl, { method: 'PUT', body: fileToUpload, headers: { 'Content-Type': fileToUpload.type } })
       if (!s3Res.ok) throw new Error("Erreur lors de l'upload vers S3")
       setFiles(prev => prev.map((f, i) => i === index ? { ...f, status: 'done' } : f))
       onUploadComplete()
@@ -52,7 +80,10 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
 
   function addFiles(newFiles: File[]) {
     const validated = newFiles.map(file => {
-      if (!ALLOWED_TYPES.includes(file.type)) return { file, status: 'error' as const, error: 'Type non autorisé (PDF, Word, images)' }
+      // HEIC : le type MIME peut etre vide selon le navigateur, on
+      // accepte aussi par extension.
+      const ok = ALLOWED_TYPES.includes(file.type) || isHeic(file)
+      if (!ok) return { file, status: 'error' as const, error: 'Type non autorisé (PDF, Word, images)' }
       if (file.size > MAX_SIZE) return { file, status: 'error' as const, error: 'Fichier trop lourd (max 20 Mo)' }
       return { file, status: 'pending' as const }
     })
@@ -119,7 +150,7 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
           ref={inputRef}
           type="file"
           multiple
-          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp"
+          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif"
           className="hidden"
           onChange={e => e.target.files && addFiles(Array.from(e.target.files))}
         />

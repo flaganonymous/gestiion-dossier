@@ -696,6 +696,28 @@ function DocumentChecklist({ dossier, documents, canUpload, canEdit, onDownload,
                 {sendingRappel ? 'Envoi...' : '\u{1F4E7} Rappel'}
               </button>
             )}
+            {canEdit && documents.length > 0 && (
+              <a
+                href={`/api/dossiers/${dossier.id}/export-banque`}
+                style={{
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  padding: '5px 12px',
+                  borderRadius: '8px',
+                  background: '#EFF6FF',
+                  color: '#2563eb',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+                title="Télécharger 5 PDFs groupés (identité, banque, logement, revenu, prêts) pour envoi banque"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Export banque
+              </a>
+            )}
           </div>
         </div>
         {rappelMessage && (

@@ -73,3 +73,14 @@ export async function deleteS3Object(s3Key: string): Promise<void> {
   })
   await s3.send(command)
 }
+
+/**
+ * Recupere le contenu binaire d'un fichier S3 (pour traitement cote serveur)
+ */
+export async function getS3ObjectBytes(s3Key: string): Promise<Uint8Array> {
+  const command = new GetObjectCommand({ Bucket: BUCKET, Key: s3Key })
+  const res = await s3.send(command)
+  const body = res.Body as { transformToByteArray: () => Promise<Uint8Array> } | null
+  if (!body) throw new Error(`Objet S3 vide: ${s3Key}`)
+  return body.transformToByteArray()
+}
