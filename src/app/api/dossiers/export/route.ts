@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   let query = admin
     .from('dossiers')
     .select(`id, titre, annee, statut, created_at, updated_at, situation_logement, situation_professionnelle, emprunt_a_deux, client:client_id(nom, prenom, email), apporteur:apporteur_id(nom, prenom, email)`)
-    .order('updated_at', { ascending: false })
+    .order('titre', { ascending: true })
 
   if (statut) query = query.eq('statut', statut)
   if (annee) query = query.eq('annee', parseInt(annee))

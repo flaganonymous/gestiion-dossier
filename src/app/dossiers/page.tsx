@@ -25,7 +25,7 @@ export default async function DossiersPage({ searchParams }: { searchParams: Pro
   let query = supabase
     .from('dossiers')
     .select(`id, titre, annee, statut, created_at, updated_at, client:client_id(nom, prenom), apporteur:apporteur_id(nom, prenom)`)
-    .order('updated_at', { ascending: false })
+    .order('titre', { ascending: true })
 
   if (profile.role === 'client') query = query.eq('client_id', profile.id)
   if (params.statut && ['en_cours', 'refuse', 'finance'].includes(params.statut)) query = query.eq('statut', params.statut)
