@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     const { sendEmail } = await import('@/lib/email')
     await sendEmail({
       to: profile.email,
-      templateSlug: 'bienvenue_client',
+      templateSlug: 'bienvenue',
       variables: {
         prenom: profile.prenom,
         nom: profile.nom,

@@ -77,31 +77,42 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: updateError.message }, { status: 500 })
   }
 
-  // Envoi email invitation (non-bloquant)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   const invitationUrl = `${appUrl}/invitation/${invitationToken}`
 
-  ;(async () => {
-    try {
-      const { sendEmail } = await import('@/lib/email')
-      await sendEmail({
-        to: cleanEmail,
-        templateSlug: 'invitation_client',
-        variables: {
-          prenom: prenom.trim(),
-          nom: nom.trim(),
-          email: cleanEmail,
-          lien_invitation: invitationUrl,
-        },
-      })
-    } catch (err) {
-      console.error('Erreur envoi email invitation client:', err)
+  // Envoi email invitation — doit être awaité sinon Lambda (Amplify) tue le
+  // handler avant que l'envoi n'ait lieu. On capture l'erreur pour ne pas
+  // faire échouer la création du client si SMTP est en panne.
+  let emailSent = true
+  let emailError: string | null = null
+  try {
+    const { sendEmail } = await import('@/lib/email')
+    const result = await sendEmail({
+      to: cleanEmail,
+      templateSlug: 'invitation_client',
+      variables: {
+        prenom: prenom.trim(),
+        nom: nom.trim(),
+        email: cleanEmail,
+        lien_invitation: invitationUrl,
+      },
+    })
+    if (!result.success) {
+      emailSent = false
+      emailError = result.error ?? 'Envoi échoué'
+      console.error('Echec envoi email invitation client:', emailError)
     }
-  })()
+  } catch (err: any) {
+    emailSent = false
+    emailError = err?.message ?? String(err)
+    console.error('Erreur envoi email invitation client:', err)
+  }
 
   return NextResponse.json({
     client: updatedProfile,
     existing: false,
     invitation_url: invitationUrl,
+    email_sent: emailSent,
+    email_error: emailError,
   })
 }
