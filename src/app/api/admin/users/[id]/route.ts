@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 
-// Activer/désactiver ou modifier le rôle
+// Activer/désactiver, modifier le rôle, nom, prénom ou email
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -20,11 +20,35 @@ export async function PATCH(
   const updates: Record<string, unknown> = {}
   if (body.role !== undefined) updates.role = body.role
   if (body.actif !== undefined) updates.actif = body.actif
-  if (body.nom !== undefined) updates.nom = body.nom
-  if (body.prenom !== undefined) updates.prenom = body.prenom
+  if (body.nom !== undefined) updates.nom = String(body.nom).trim()
+  if (body.prenom !== undefined) updates.prenom = String(body.prenom).trim()
 
-  const { error } = await supabase.from('profiles').update(updates).eq('id', id)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  let newEmail: string | undefined
+  if (body.email !== undefined) {
+    newEmail = String(body.email).trim().toLowerCase()
+    if (!newEmail || !newEmail.includes('@')) {
+      return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
+    }
+    updates.email = newEmail
+  }
+
+  // Email change : mettre à jour auth.users avec le service role
+  if (newEmail) {
+    const adminClient = await createAdminClient()
+    const { error: authError } = await adminClient.auth.admin.updateUserById(id, {
+      email: newEmail,
+      email_confirm: true,
+    })
+    if (authError) {
+      return NextResponse.json({ error: `Auth: ${authError.message}` }, { status: 500 })
+    }
+  }
+
+  if (Object.keys(updates).length > 0) {
+    const admin = await createAdminClient()
+    const { error } = await admin.from('profiles').update(updates).eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   return NextResponse.json({ ok: true })
 }
