@@ -54,10 +54,11 @@ export function UsersClient({ initialUsers }: { initialUsers: Profile[] }) {
     setUsers(await listRes.json())
 
     if (form.role === 'client') {
+      const dossierNote = data.dossier_id ? ' · dossier cree' : (data.dossier_error ? ` · dossier non cree : ${data.dossier_error}` : '')
       if (data.email_sent) {
-        setCreateFlash({ kind: 'success', msg: 'Client cree et email d\'invitation envoye' })
+        setCreateFlash({ kind: 'success', msg: `Client cree, invitation envoyee${dossierNote}` })
       } else {
-        setCreateFlash({ kind: 'error', msg: `Client cree mais email non envoye : ${data.email_error ?? 'raison inconnue'}` })
+        setCreateFlash({ kind: 'error', msg: `Client cree mais email non envoye : ${data.email_error ?? 'raison inconnue'}${dossierNote}` })
       }
     } else {
       setCreateFlash({ kind: 'success', msg: 'Compte cree' })

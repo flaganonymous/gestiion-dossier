@@ -64,6 +64,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: updateErr.message }, { status: 500 })
     }
 
+    // Creation automatique du dossier associe au client.
+    // Le client pourra le completer lui-meme apres activation.
+    const currentYear = new Date().getFullYear()
+    const dossierTitre = `${String(prenom).trim()} ${String(nom).trim()}`.trim()
+    const { data: dossierData, error: dossierErr } = await adminClient
+      .from('dossiers')
+      .insert({
+        titre: dossierTitre || cleanEmail,
+        annee: currentYear,
+        statut: 'en_cours',
+        client_id: newUserId,
+      })
+      .select('id')
+      .single()
+
+    if (dossierErr) {
+      // Ne pas bloquer la creation du client si le dossier echoue
+      console.error('Creation dossier automatique echouee:', dossierErr)
+    }
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const invitationUrl = `${appUrl}/invitation/${invitationToken}`
 
@@ -82,6 +102,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       id: newUserId,
       invitation_url: invitationUrl,
+      dossier_id: dossierData?.id ?? null,
+      dossier_error: dossierErr?.message ?? null,
       email_sent: result.success,
       email_error: result.success ? null : (result.error ?? 'Envoi echoue'),
     })
