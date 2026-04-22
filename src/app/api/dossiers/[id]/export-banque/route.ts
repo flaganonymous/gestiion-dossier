@@ -5,7 +5,7 @@ import { PDFDocument, PDFImage, StandardFonts, rgb } from 'pdf-lib'
 import JSZip from 'jszip'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60
+export const maxDuration = 300
 
 /**
  * GET /api/dossiers/[id]/export-banque
