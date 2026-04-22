@@ -30,7 +30,12 @@ export async function PATCH(
   if (body.host !== undefined) updates.host = body.host
   if (body.port !== undefined) updates.port = body.port
   if (body.username !== undefined) updates.username = body.username
-  if (body.password !== undefined) updates.password_encrypted = body.password
+  // Un mot de passe vide n'est PAS une demande d'effacement : on l'ignore.
+  // Pour ne pas ecraser la valeur stockee quand l'utilisateur modifie la
+  // config sans retaper le mot de passe.
+  if (body.password !== undefined && body.password !== '') {
+    updates.password_encrypted = body.password
+  }
   if (body.from_email !== undefined) updates.from_email = body.from_email
   if (body.from_name !== undefined) updates.from_name = body.from_name
   if (body.use_tls !== undefined) updates.use_tls = body.use_tls

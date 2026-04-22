@@ -136,10 +136,15 @@ export default function EmailConfigPage() {
     const url = editingId ? `/api/admin/smtp/${editingId}` : '/api/admin/smtp'
     const method = editingId ? 'PATCH' : 'POST'
 
+    // En edition, si le mot de passe n'a pas ete retape on ne l'envoie
+    // pas pour eviter d'ecraser celui stocke en base.
+    const payload: Record<string, unknown> = { ...smtpForm }
+    if (editingId && !smtpForm.password) delete payload.password
+
     const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(smtpForm),
+      body: JSON.stringify(payload),
     })
 
     if (res.ok) {
