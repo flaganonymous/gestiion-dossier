@@ -41,10 +41,11 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
   }
 
   async function convertHeicToJpeg(file: File): Promise<File> {
-    // heic2any n'existe que cote navigateur : import dynamique.
-    const heic2any = (await import('heic2any')).default
-    const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 })
-    const jpegBlob = Array.isArray(blob) ? blob[0] : blob
+    // heic-to est plus robuste que heic2any sur les HEIC recents (iPhone 12+
+    // Pro en HEVC 10-bit). Import dynamique car le module n'existe que
+    // cote navigateur.
+    const { heicTo } = await import('heic-to')
+    const jpegBlob = await heicTo({ blob: file, type: 'image/jpeg', quality: 0.85 })
     const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg')
     return new File([jpegBlob], newName, { type: 'image/jpeg' })
   }
@@ -57,8 +58,12 @@ export function UploadZone({ dossierId, categorieDocument, onUploadComplete, com
       // pdf-lib ne peut pas l'integrer dans l'export banque.
       let fileToUpload = uf.file
       if (isHeic(uf.file)) {
-        fileToUpload = await convertHeicToJpeg(uf.file)
-        setFiles(prev => prev.map((f, i) => i === index ? { ...f, file: fileToUpload } : f))
+        try {
+          fileToUpload = await convertHeicToJpeg(uf.file)
+          setFiles(prev => prev.map((f, i) => i === index ? { ...f, file: fileToUpload } : f))
+        } catch {
+          throw new Error('Impossible de convertir ce HEIC. Sur Mac : ouvre-le dans Apercu puis exporte en JPEG.')
+        }
       }
 
       const res = await fetch('/api/documents/upload', {
