@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { getS3ObjectBytes } from '@/lib/s3'
+import { getS3ObjectBytes, putS3ObjectBytes, getDownloadPresignedUrl } from '@/lib/s3'
 import { PDFDocument, PDFImage, StandardFonts, rgb } from 'pdf-lib'
 import JSZip from 'jszip'
 import { CATEGORIES_DOCUMENTS } from '@/lib/documents-checklist'
@@ -162,12 +162,15 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const suffix = client ? `_${(client.prenom ?? '').replace(/\W/g, '')}_${(client.nom ?? '').replace(/\W/g, '')}` : ''
   const filename = `export-banque_${safeTitre}${suffix}.zip`
 
-  return new NextResponse(new Uint8Array(zipBytes), {
-    headers: {
-      'Content-Type': 'application/zip',
-      'Content-Disposition': `attachment; filename="${filename}"`,
-    },
-  })
+  // Lambda a une limite de 6 Mo sur la reponse en synchrone. Les ZIPs
+  // d'export depassent rapidement cette limite (photos iPhone, gros PDFs).
+  // On stocke le ZIP sur S3 sous une cle temporaire, on genere une URL
+  // presignee et on redirige le navigateur vers cette URL.
+  const tmpKey = `exports/${dossier.id}/${Date.now()}_${filename}`
+  await putS3ObjectBytes(tmpKey, zipBytes, 'application/zip')
+  const downloadUrl = await getDownloadPresignedUrl(tmpKey, filename)
+
+  return NextResponse.redirect(downloadUrl, { status: 302 })
 }
 
 function addImagePage(pdf: PDFDocument, img: PDFImage) {

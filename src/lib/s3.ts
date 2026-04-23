@@ -84,3 +84,18 @@ export async function getS3ObjectBytes(s3Key: string): Promise<Uint8Array> {
   if (!body) throw new Error(`Objet S3 vide: ${s3Key}`)
   return body.transformToByteArray()
 }
+
+/**
+ * Upload un blob vers S3 directement depuis le serveur.
+ * Utile pour les fichiers generes cote serveur (ex: ZIP d'export banque)
+ * qui depassent la limite de 6 Mo d'API Gateway / Lambda en synchrone.
+ */
+export async function putS3ObjectBytes(s3Key: string, bytes: Uint8Array, contentType: string): Promise<void> {
+  const command = new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: s3Key,
+    Body: bytes,
+    ContentType: contentType,
+  })
+  await s3.send(command)
+}
