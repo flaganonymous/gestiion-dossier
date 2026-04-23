@@ -3,6 +3,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { getS3ObjectBytes } from '@/lib/s3'
 import { PDFDocument, PDFImage, StandardFonts, rgb } from 'pdf-lib'
 import JSZip from 'jszip'
+import { CATEGORIES_DOCUMENTS } from '@/lib/documents-checklist'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 300
@@ -28,6 +29,20 @@ const GROUPES: Array<{ id: GroupeId; fileName: string }> = [
   { id: 'activite_professionnelle', fileName: '4-Revenu.pdf' },
   { id: 'credits', fileName: '5-Prets.pdf' },
 ]
+
+// Map : ID de document (ex "identite_cni", "bancaire_rib", "pro_bulletin_decembre")
+// -> ID de categorie (ex "identite", "comptes_bancaires", "activite_professionnelle").
+// Construite depuis la config pour que le mapping suive si de nouveaux
+// types de documents sont ajoutes dans documents-checklist.ts.
+const DOC_ID_TO_GROUPE: Record<string, GroupeId> = (() => {
+  const map: Record<string, GroupeId> = {}
+  for (const cat of CATEGORIES_DOCUMENTS) {
+    for (const doc of cat.documents) {
+      map[doc.id] = cat.id as GroupeId
+    }
+  }
+  return map
+})()
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -71,7 +86,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const skipped: string[] = []
 
   for (const groupe of GROUPES) {
-    const docsGroupe = (documents ?? []).filter(d => d.categorie_document === groupe.id)
+    const docsGroupe = (documents ?? []).filter(d => {
+      if (!d.categorie_document) return false
+      // Si categorie_document est deja un ID de groupe (fallback pour
+      // d'eventuels uploads generiques), on compare directement.
+      if (d.categorie_document === groupe.id) return true
+      return DOC_ID_TO_GROUPE[d.categorie_document] === groupe.id
+    })
 
     const pdf = await PDFDocument.create()
     const font = await pdf.embedFont(StandardFonts.Helvetica)
