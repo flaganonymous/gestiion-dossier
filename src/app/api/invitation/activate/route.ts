@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
 
   // Try to send welcome email (non-blocking)
   try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     const { sendEmail } = await import('@/lib/email')
     await sendEmail({
       to: profile.email,
@@ -85,6 +86,7 @@ export async function POST(req: NextRequest) {
       variables: {
         prenom: profile.prenom,
         nom: profile.nom,
+        lien_connexion: `${appUrl}/login`,
       },
     })
   } catch {
