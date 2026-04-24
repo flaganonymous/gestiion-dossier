@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { UploadZone } from '@/components/upload-zone'
-import { Dossier, Document, HistoriqueStatut, Profile, STATUT_LABELS, DossierStatut } from '@/lib/supabase/types'
+import { Dossier, Document, HistoriqueStatut, Profile, STATUT_LABELS, DossierStatut, Apporteur } from '@/lib/supabase/types'
 import { ArrowLeft, FileText, ImageIcon, Download, Trash2, Clock, User, Calendar, ChevronDown, Pencil, Save, X, CheckCircle2, Circle, Eye, Home, UserRound, Landmark, CreditCard, Briefcase, ChevronRight, Upload } from 'lucide-react'
 import { SITUATION_LOGEMENT_LABELS, SITUATION_PROFESSIONNELLE_LABELS, CATEGORIES_DOCUMENTS, getDocumentsRequis, type SituationLogement, type SituationProfessionnelle } from '@/lib/documents-checklist'
 import { format, formatDistanceToNow } from 'date-fns'
@@ -35,13 +35,24 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   const [editSituationLogement, setEditSituationLogement] = useState<string>(dossier.situation_logement ?? 'locataire')
   const [editSituationProfessionnelle, setEditSituationProfessionnelle] = useState<string>(dossier.situation_professionnelle ?? 'salarie')
   const [editEmpruntADeux, setEditEmpruntADeux] = useState(dossier.emprunt_a_deux ?? false)
+  const [editApporteurId, setEditApporteurId] = useState<string>(dossier.apporteur_id ?? '')
+  const [apporteurs, setApporteurs] = useState<Apporteur[]>([])
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [previewDoc, setPreviewDoc] = useState<Document | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const canEdit = ['admin', 'collaborateur'].includes(profile.role)
   const canUpload = ['admin', 'collaborateur', 'client'].includes(profile.role)
   const badge = STATUT_BADGE[statut] ?? STATUT_BADGE.en_cours
+
+  useEffect(() => {
+    if (!canEdit) return
+    fetch('/api/auth/me')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data?.apporteurs) setApporteurs(data.apporteurs) })
+      .catch(() => {})
+  }, [canEdit])
 
   async function refreshDocuments() {
     const res = await fetch(`/api/dossiers/${dossier.id}/documents`)
@@ -95,6 +106,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
         situation_logement: editSituationLogement,
         situation_professionnelle: editSituationProfessionnelle,
         emprunt_a_deux: editEmpruntADeux,
+        apporteur_id: editApporteurId || null,
       }),
     })
     if (res.ok) {
@@ -102,6 +114,20 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
       router.refresh()
     }
     setSaving(false)
+  }
+
+  async function handleDeleteDossier() {
+    if (!confirm(`Supprimer définitivement le dossier « ${dossier.titre} » ?\n\nCette action supprimera aussi tous les documents associés et ne peut pas être annulée.`)) return
+    setDeleting(true)
+    const res = await fetch(`/api/dossiers/${dossier.id}`, { method: 'DELETE' })
+    if (res.ok) {
+      router.push('/dossiers')
+      router.refresh()
+    } else {
+      const data = await res.json().catch(() => ({}))
+      alert(data.error || 'Erreur lors de la suppression')
+      setDeleting(false)
+    }
   }
 
   const editInputStyle = {
@@ -168,6 +194,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                     setEditSituationLogement(dossier.situation_logement ?? 'locataire')
                     setEditSituationProfessionnelle(dossier.situation_professionnelle ?? 'salarie')
                     setEditEmpruntADeux(dossier.emprunt_a_deux ?? false)
+                    setEditApporteurId(dossier.apporteur_id ?? '')
                   }}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
@@ -244,6 +271,46 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                   <option key={value} value={value}>{label}</option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label style={editLabelStyle}>Apporteur d&apos;affaires</label>
+              <select
+                value={editApporteurId}
+                onChange={e => setEditApporteurId(e.target.value)}
+                style={editInputStyle}
+              >
+                <option value="">Aucun apporteur</option>
+                {apporteurs.map(a => (
+                  <option key={a.id} value={a.id}>{a.prenom} {a.nom}</option>
+                ))}
+                {dossier.apporteur && !apporteurs.some(a => a.id === dossier.apporteur_id) && (
+                  <option value={dossier.apporteur.id}>
+                    {dossier.apporteur.prenom} {dossier.apporteur.nom} (inactif)
+                  </option>
+                )}
+              </select>
+            </div>
+
+            <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #EBEBEB' }}>
+              <button
+                type="button"
+                onClick={handleDeleteDossier}
+                disabled={deleting}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '6px',
+                  background: '#fff', color: '#dc2626', border: '1.5px solid #FECACA',
+                  padding: '8px 16px', borderRadius: '8px',
+                  fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
+                  cursor: deleting ? 'not-allowed' : 'pointer', opacity: deleting ? 0.6 : 1,
+                }}
+              >
+                <Trash2 className="h-4 w-4" />
+                {deleting ? 'Suppression...' : 'Supprimer le dossier'}
+              </button>
+              <p style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '12px', color: '#585e6a', marginTop: '8px' }}>
+                Supprime définitivement le dossier et tous ses documents. Cette action ne peut pas être annulée.
+              </p>
             </div>
           </div>
         ) : (
