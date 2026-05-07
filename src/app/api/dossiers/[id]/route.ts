@@ -17,10 +17,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 
   const body = await req.json()
-  const allowedFields = ['titre', 'notes', 'client_id', 'apporteur_id', 'situation_logement', 'situation_professionnelle', 'emprunt_a_deux']
+  const allowedFields = ['titre', 'notes', 'client_id', 'apporteur_id', 'situation_logement', 'situation_professionnelle', 'emprunt_a_deux', 'annee']
   const updates: Record<string, any> = {}
   for (const field of allowedFields) {
     if (body[field] !== undefined) updates[field] = body[field]
+  }
+
+  if (updates.annee !== undefined) {
+    const annee = Number(updates.annee)
+    if (!Number.isInteger(annee) || annee < 1900 || annee > 2100) {
+      return NextResponse.json({ error: 'Année invalide' }, { status: 400 })
+    }
+    updates.annee = annee
   }
 
   const { data, error } = await admin.from('dossiers').update(updates).eq('id', id).select('*').single()

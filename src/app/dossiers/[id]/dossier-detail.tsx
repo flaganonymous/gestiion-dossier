@@ -36,6 +36,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   const [editSituationProfessionnelle, setEditSituationProfessionnelle] = useState<string>(dossier.situation_professionnelle ?? 'salarie')
   const [editEmpruntADeux, setEditEmpruntADeux] = useState(dossier.emprunt_a_deux ?? false)
   const [editApporteurId, setEditApporteurId] = useState<string>(dossier.apporteur_id ?? '')
+  const [editAnnee, setEditAnnee] = useState<string>(String(dossier.annee))
   const [apporteurs, setApporteurs] = useState<Apporteur[]>([])
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -96,6 +97,11 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
   }
 
   async function handleSave() {
+    const anneeNum = Number(editAnnee)
+    if (!Number.isInteger(anneeNum) || anneeNum < 1900 || anneeNum > 2100) {
+      alert('Année invalide (doit être un entier entre 1900 et 2100)')
+      return
+    }
     setSaving(true)
     const res = await fetch(`/api/dossiers/${dossier.id}`, {
       method: 'PATCH',
@@ -107,11 +113,15 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
         situation_professionnelle: editSituationProfessionnelle,
         emprunt_a_deux: editEmpruntADeux,
         apporteur_id: editApporteurId || null,
+        annee: anneeNum,
       }),
     })
     if (res.ok) {
       setEditing(false)
       router.refresh()
+    } else {
+      const data = await res.json().catch(() => ({}))
+      alert(data.error || 'Erreur lors de l\'enregistrement')
     }
     setSaving(false)
   }
@@ -195,6 +205,7 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
                     setEditSituationProfessionnelle(dossier.situation_professionnelle ?? 'salarie')
                     setEditEmpruntADeux(dossier.emprunt_a_deux ?? false)
                     setEditApporteurId(dossier.apporteur_id ?? '')
+                    setEditAnnee(String(dossier.annee))
                   }}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
@@ -215,6 +226,21 @@ export function DossierDetail({ dossier, documents: initDocs, historique, profil
               <input
                 value={editTitre}
                 onChange={e => setEditTitre(e.target.value)}
+                style={editInputStyle}
+                onFocus={e => e.target.style.borderColor = '#EE7D07'}
+                onBlur={e => e.target.style.borderColor = '#EBEBEB'}
+              />
+            </div>
+
+            <div>
+              <label style={editLabelStyle}>Année du dossier</label>
+              <input
+                type="number"
+                min={1900}
+                max={2100}
+                step={1}
+                value={editAnnee}
+                onChange={e => setEditAnnee(e.target.value)}
                 style={editInputStyle}
                 onFocus={e => e.target.style.borderColor = '#EE7D07'}
                 onBlur={e => e.target.style.borderColor = '#EBEBEB'}
