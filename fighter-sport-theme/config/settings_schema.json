@@ -1,9 +1,9 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Fighter Arena",
+    "theme_name": "Arts Martiaux",
     "theme_version": "1.0.0",
-    "theme_author": "Fighter Sport",
+    "theme_author": "Arts Martiaux",
     "theme_documentation_url": "https://fightersport.fr",
     "theme_support_url": "https://fightersport.fr"
   },
@@ -188,7 +188,6 @@
         "type": "text",
         "id": "universe_1_domain",
         "label": "Nom de domaine dédié",
-        "default": "fightersport.fr",
         "info": "Ex. bestsport.fr — sans https://. Laisser vide si aucun."
       },
       {

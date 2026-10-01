@@ -1,6 +1,6 @@
-# Fighter Arena — thème Shopify multi-marques
+# Arts Martiaux — thème Shopify multi-marques
 
-Thème Shopify (Online Store 2.0) pour **fightersport.fr** : une seule boutique, un seul panier, plusieurs marques (Fighter, Best Sport, Daedo…), chacune avec sa page, sa couleur, son logo et, en option, son propre nom de domaine.
+Thème Shopify (Online Store 2.0) du site principal **Arts Martiaux** (voir [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)) : une seule boutique, un seul panier, plusieurs marques (Fighter, Best Sport, Daedo…), chacune avec sa page, sa couleur, son logo et, en option, son propre nom de domaine.
 
 Univers visuel : fond noir profond, rouge Fighter, typographie condensée géante, coupes en biais, animations au scroll.
 
