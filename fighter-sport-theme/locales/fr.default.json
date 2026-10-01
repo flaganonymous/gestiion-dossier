@@ -1,0 +1,58 @@
+{
+  "general": {
+    "menu": "Menu",
+    "main_menu": "Menu principal",
+    "close": "Fermer",
+    "search": "Recherche",
+    "search_placeholder": "Gants, kimono, sac de frappe…",
+    "account": "Mon compte",
+    "cart": "Panier",
+    "view_all": "Tout voir",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "404_title": "Cette page a été mise K.O.",
+    "404_text": "La page que vous cherchez n'existe pas ou a été déplacée."
+  },
+  "accessibility": { "skip_to_content": "Aller au contenu" },
+  "products": {
+    "product": {
+      "add_to_cart": "Ajouter au panier",
+      "add": "Ajouter",
+      "added": "Ajouté au panier 🥊",
+      "sold_out": "Épuisé",
+      "unavailable": "Indisponible",
+      "choose_options": "Choisir",
+      "from": "À partir de",
+      "save": "Économisez",
+      "tax_included": "TVA incluse — frais de port calculés au paiement",
+      "quantity": "Quantité",
+      "size_guide": "Guide des tailles",
+      "in_stock": "En stock — expédié sous 24/48h",
+      "low_stock": "Plus que {{ count }} en stock — commandez vite !",
+      "low_stock_js": "Plus que __count__ en stock — commandez vite !",
+      "description": "Description",
+      "products": "produits",
+      "colors": "couleurs"
+    },
+    "badges": { "new": "Nouveau", "last_items": "Derniers articles" }
+  },
+  "collections": {
+    "filters": "Filtrer",
+    "sort_by": "Trier par",
+    "clear": "Tout effacer",
+    "empty": "Aucun produit ne correspond à ces filtres."
+  },
+  "cart": {
+    "empty": "Ton panier est vide",
+    "continue": "Continuer mes achats",
+    "remove": "Retirer",
+    "total": "Total",
+    "taxes": "TVA incluse. Livraison calculée à l'étape suivante.",
+    "checkout": "Commander",
+    "note": "Une précision pour votre commande ?",
+    "upsell": "Complète ton équipement",
+    "shipping_remaining_html": "Plus que <strong>{{ amount }}</strong> pour la livraison offerte",
+    "shipping_unlocked": "Bravo ! La livraison est offerte 🎉"
+  },
+  "search": { "results_count": "{{ count }} résultat(s) pour « {{ terms }} »" }
+}

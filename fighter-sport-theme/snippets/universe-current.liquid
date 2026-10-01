@@ -1,0 +1,21 @@
+{%- comment -%}
+  Renvoie l'index de l'univers de la page / collection courante (rien si aucun).
+  Usage : {% capture u %}{% render 'universe-current', page: page, collection: collection, template_name: template.name %}{% endcapture %}
+{%- endcomment -%}
+{%- liquid
+  assign found = false
+  for n in (1..4)
+    if found
+      continue
+    endif
+    assign k_url = 'universe_' | append: n | append: '_url'
+    assign k_coll = 'universe_' | append: n | append: '_collection'
+    if template_name == 'page' and settings[k_url] != blank and settings[k_url] == page.url
+      echo n
+      assign found = true
+    elsif template_name == 'collection' and settings[k_coll] != blank and settings[k_coll].handle == collection.handle
+      echo n
+      assign found = true
+    endif
+  endfor
+-%}

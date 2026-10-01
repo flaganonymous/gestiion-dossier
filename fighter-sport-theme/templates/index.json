@@ -1,0 +1,91 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Nouvelle saison — Fighter 2026",
+        "title": "Entraîne-toi\ncomme\nun champion",
+        "outline_line": 2,
+        "accent_line": 3,
+        "cta_1_label": "Découvrir Fighter",
+        "cta_1_link": "shopify://collections/gants-de-boxe",
+        "cta_2_label": "Toutes les marques",
+        "cta_2_link": "shopify://collections/all"
+      }
+    },
+    "marquee": { "type": "marquee", "settings": { "words": "Boxe, MMA, Muay Thaï, Karaté, Judo, JJB, Kick-boxing" } },
+    "universes": {
+      "type": "universes",
+      "blocks": {
+        "u1": { "type": "universe", "settings": { "universe": "1", "featured": true, "description": "Gants, protections, sacs de frappe, rings et cages. L'équipement des clubs et des combattants, conçu en Europe." } },
+        "u2": { "type": "universe", "settings": { "universe": "2", "description": "Tout le sport, pour tous les niveaux." } },
+        "u3": { "type": "universe", "settings": { "universe": "3", "description": "Karategis et protections homologués WKF pour la compétition." } }
+      },
+      "block_order": ["u1", "u2", "u3"],
+      "settings": {}
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "blocks": {
+        "t1": { "type": "collection", "settings": { "collection": "gants-de-boxe", "label": "Gants de boxe" } },
+        "t2": { "type": "collection", "settings": { "collection": "proteges-pied-tibia", "label": "Protège-tibias" } },
+        "t3": { "type": "collection", "settings": { "collection": "gants-de-mma", "label": "MMA" } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": { "eyebrow": "Les incontournables", "title": "Le choix des combattants", "universe": "1" }
+    },
+    "disciplines": {
+      "type": "discipline-grid",
+      "blocks": {
+        "d1": { "type": "discipline", "settings": { "collection": "gants-de-boxe", "title": "Boxe", "large": true } },
+        "d2": { "type": "discipline", "settings": { "collection": "gants-de-mma", "title": "MMA" } },
+        "d3": { "type": "discipline", "settings": { "collection": "proteges-pied-tibia", "title": "Muay Thaï" } },
+        "d4": { "type": "discipline", "settings": { "collection": "kimono-de-jiu-jitsu-bresilien-jjb-bjj-gi", "title": "JJB" } },
+        "d5": { "type": "discipline", "settings": { "collection": "sacs-lourds-suspendus", "title": "Sacs de frappe" } }
+      },
+      "block_order": ["d1", "d2", "d3", "d4", "d5"],
+      "settings": {}
+    },
+    "spotlight": {
+      "type": "product-spotlight",
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "title": "Absorption des chocs", "text": "Rembourrage dense pour encaisser les rounds.", "x": 38, "y": 35 } },
+        "f2": { "type": "feature", "settings": { "title": "Made in EU", "text": "Fabriqué en Europe, qualité pro.", "x": 62, "y": 55 } },
+        "f3": { "type": "feature", "settings": { "title": "Pour les clubs", "text": "Résiste à un usage intensif.", "x": 45, "y": 75 } }
+      },
+      "block_order": ["f1", "f2", "f3"],
+      "settings": { "product": "pao-thailandais-fighter-gris-paire-ftp-001g", "giant_word": "Power", "eyebrow": "Produit star Fighter" }
+    },
+    "stats": {
+      "type": "stats",
+      "blocks": {
+        "s1": { "type": "stat", "settings": { "number": 900, "suffix": "+", "label": "références" } },
+        "s2": { "type": "stat", "settings": { "number": 3, "suffix": "", "label": "marques, un seul panier" } },
+        "s3": { "type": "stat", "settings": { "number": 48, "suffix": "h", "label": "expédition" } },
+        "s4": { "type": "stat", "settings": { "number": 30, "suffix": "j", "label": "pour changer d'avis" } }
+      },
+      "block_order": ["s1", "s2", "s3", "s4"],
+      "settings": {}
+    },
+    "countdown": { "type": "countdown", "settings": { "cta_link": "shopify://collections/gants" } },
+    "athletes": {
+      "type": "testimonials",
+      "blocks": { "a1": { "type": "athlete" }, "a2": { "type": "athlete" }, "a3": { "type": "athlete" }, "a4": { "type": "athlete" } },
+      "block_order": ["a1", "a2", "a3", "a4"],
+      "settings": {}
+    },
+    "trust": {
+      "type": "trust-bar",
+      "blocks": {
+        "i1": { "type": "item", "settings": { "icon": "truck", "title": "Expédition 24/48h", "text": "Offerte dès 69 €" } },
+        "i2": { "type": "item", "settings": { "icon": "return", "title": "Retours 30 jours", "text": "Échange de taille gratuit" } },
+        "i3": { "type": "item", "settings": { "icon": "eu", "title": "Made in EU", "text": "Qualité professionnelle" } },
+        "i4": { "type": "item", "settings": { "icon": "chat", "title": "Conseil d'experts", "text": "Des pratiquants vous répondent" } }
+      },
+      "block_order": ["i1", "i2", "i3", "i4"],
+      "settings": {}
+    },
+    "story": { "type": "image-with-text", "settings": {} }
+  },
+  "order": ["hero", "marquee", "universes", "bestsellers", "disciplines", "spotlight", "stats", "countdown", "athletes", "trust", "story"]
+}

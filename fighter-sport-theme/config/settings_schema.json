@@ -1,0 +1,526 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Fighter Arena",
+    "theme_version": "1.0.0",
+    "theme_author": "Fighter Sport",
+    "theme_documentation_url": "https://fightersport.fr",
+    "theme_support_url": "https://fightersport.fr"
+  },
+  {
+    "name": "Couleurs",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Base (sombre)"
+      },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Fond",
+        "default": "#0B0B0C"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface (cartes, panneaux)",
+        "default": "#161618"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Texte",
+        "default": "#F4F1EA"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "label": "Texte secondaire",
+        "default": "#9A968E"
+      },
+      {
+        "type": "header",
+        "content": "Accent Fighter"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent principal",
+        "default": "#E10600"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_text",
+        "label": "Texte sur accent",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_sale",
+        "label": "Promo / urgence",
+        "default": "#FFD400"
+      },
+      {
+        "type": "header",
+        "content": "Sections claires"
+      },
+      {
+        "type": "color",
+        "id": "color_light",
+        "label": "Fond clair",
+        "default": "#F4F1EA"
+      },
+      {
+        "type": "color",
+        "id": "color_light_text",
+        "label": "Texte sur fond clair",
+        "default": "#0B0B0C"
+      }
+    ]
+  },
+  {
+    "name": "Typographie",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "label": "Titres",
+        "default": "oswald_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Texte",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "label": "Taille des titres",
+        "min": 80,
+        "max": 150,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_uppercase",
+        "label": "Titres en majuscules",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Mise en page",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Largeur max",
+        "min": 1100,
+        "max": 1800,
+        "step": 20,
+        "unit": "px",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "label": "Arrondi des angles",
+        "min": 0,
+        "max": 16,
+        "step": 1,
+        "unit": "px",
+        "default": 2
+      },
+      {
+        "type": "checkbox",
+        "id": "grain",
+        "label": "Texture « grain » sur le fond",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "animations",
+        "label": "Animations d'apparition au scroll",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  },
+  {
+    "name": "Univers & marques",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Un seul site, plusieurs marques. Chaque univers a sa couleur, son logo, sa page d'atterrissage et (optionnel) son propre nom de domaine. Un visiteur arrivant par le domaine de la marque, ou par un lien ?univers=<identifiant>, voit tout le site habillé aux couleurs de cette marque pendant sa visite. Les produits dont le « fournisseur » correspond reçoivent automatiquement le badge et la couleur de l'univers."
+      },
+      {
+        "type": "header",
+        "content": "Univers 1 — marque principale"
+      },
+      {
+        "type": "text",
+        "id": "universe_1_name",
+        "label": "Nom",
+        "default": "Fighter"
+      },
+      {
+        "type": "text",
+        "id": "universe_1_handle",
+        "label": "Identifiant (pour ?univers=)",
+        "default": "fighter",
+        "info": "Minuscules, sans espace. Ex. best-sport"
+      },
+      {
+        "type": "text",
+        "id": "universe_1_vendor",
+        "label": "Fournisseur(s) Shopify correspondant(s)",
+        "default": "Fighter",
+        "info": "Séparez par des virgules si plusieurs."
+      },
+      {
+        "type": "text",
+        "id": "universe_1_domain",
+        "label": "Nom de domaine dédié",
+        "default": "fightersport.fr",
+        "info": "Ex. bestsport.fr — sans https://. Laisser vide si aucun."
+      },
+      {
+        "type": "text",
+        "id": "universe_1_tagline",
+        "label": "Signature",
+        "default": "Made for the fight"
+      },
+      {
+        "type": "color",
+        "id": "universe_1_accent",
+        "label": "Couleur",
+        "default": "#E10600"
+      },
+      {
+        "type": "image_picker",
+        "id": "universe_1_logo",
+        "label": "Logo (version claire, fond transparent)"
+      },
+      {
+        "type": "url",
+        "id": "universe_1_url",
+        "label": "Page d'atterrissage de la marque",
+        "info": "Créez une page avec le modèle « page.univers » ou une collection avec « collection.univers »."
+      },
+      {
+        "type": "collection",
+        "id": "universe_1_collection",
+        "label": "Collection de la marque"
+      },
+      {
+        "type": "header",
+        "content": "Univers 2"
+      },
+      {
+        "type": "text",
+        "id": "universe_2_name",
+        "label": "Nom",
+        "default": "Best Sport"
+      },
+      {
+        "type": "text",
+        "id": "universe_2_handle",
+        "label": "Identifiant (pour ?univers=)",
+        "default": "best-sport",
+        "info": "Minuscules, sans espace. Ex. best-sport"
+      },
+      {
+        "type": "text",
+        "id": "universe_2_vendor",
+        "label": "Fournisseur(s) Shopify correspondant(s)",
+        "default": "Best Sport",
+        "info": "Séparez par des virgules si plusieurs."
+      },
+      {
+        "type": "text",
+        "id": "universe_2_domain",
+        "label": "Nom de domaine dédié",
+        "info": "Ex. bestsport.fr — sans https://. Laisser vide si aucun."
+      },
+      {
+        "type": "text",
+        "id": "universe_2_tagline",
+        "label": "Signature",
+        "default": "Le sport pour tous"
+      },
+      {
+        "type": "color",
+        "id": "universe_2_accent",
+        "label": "Couleur",
+        "default": "#FF6A00"
+      },
+      {
+        "type": "image_picker",
+        "id": "universe_2_logo",
+        "label": "Logo (version claire, fond transparent)"
+      },
+      {
+        "type": "url",
+        "id": "universe_2_url",
+        "label": "Page d'atterrissage de la marque",
+        "info": "Créez une page avec le modèle « page.univers » ou une collection avec « collection.univers »."
+      },
+      {
+        "type": "collection",
+        "id": "universe_2_collection",
+        "label": "Collection de la marque"
+      },
+      {
+        "type": "header",
+        "content": "Univers 3"
+      },
+      {
+        "type": "text",
+        "id": "universe_3_name",
+        "label": "Nom",
+        "default": "Daedo"
+      },
+      {
+        "type": "text",
+        "id": "universe_3_handle",
+        "label": "Identifiant (pour ?univers=)",
+        "default": "daedo",
+        "info": "Minuscules, sans espace. Ex. best-sport"
+      },
+      {
+        "type": "text",
+        "id": "universe_3_vendor",
+        "label": "Fournisseur(s) Shopify correspondant(s)",
+        "default": "Daedo",
+        "info": "Séparez par des virgules si plusieurs."
+      },
+      {
+        "type": "text",
+        "id": "universe_3_domain",
+        "label": "Nom de domaine dédié",
+        "info": "Ex. bestsport.fr — sans https://. Laisser vide si aucun."
+      },
+      {
+        "type": "text",
+        "id": "universe_3_tagline",
+        "label": "Signature",
+        "default": "L'excellence du karaté WKF"
+      },
+      {
+        "type": "color",
+        "id": "universe_3_accent",
+        "label": "Couleur",
+        "default": "#1D5BFF"
+      },
+      {
+        "type": "image_picker",
+        "id": "universe_3_logo",
+        "label": "Logo (version claire, fond transparent)"
+      },
+      {
+        "type": "url",
+        "id": "universe_3_url",
+        "label": "Page d'atterrissage de la marque",
+        "info": "Créez une page avec le modèle « page.univers » ou une collection avec « collection.univers »."
+      },
+      {
+        "type": "collection",
+        "id": "universe_3_collection",
+        "label": "Collection de la marque"
+      },
+      {
+        "type": "header",
+        "content": "Univers 4"
+      },
+      {
+        "type": "text",
+        "id": "universe_4_name",
+        "label": "Nom"
+      },
+      {
+        "type": "text",
+        "id": "universe_4_handle",
+        "label": "Identifiant (pour ?univers=)",
+        "info": "Minuscules, sans espace. Ex. best-sport"
+      },
+      {
+        "type": "text",
+        "id": "universe_4_vendor",
+        "label": "Fournisseur(s) Shopify correspondant(s)",
+        "info": "Séparez par des virgules si plusieurs."
+      },
+      {
+        "type": "text",
+        "id": "universe_4_domain",
+        "label": "Nom de domaine dédié",
+        "info": "Ex. bestsport.fr — sans https://. Laisser vide si aucun."
+      },
+      {
+        "type": "text",
+        "id": "universe_4_tagline",
+        "label": "Signature"
+      },
+      {
+        "type": "color",
+        "id": "universe_4_accent",
+        "label": "Couleur",
+        "default": "#19B26B"
+      },
+      {
+        "type": "image_picker",
+        "id": "universe_4_logo",
+        "label": "Logo (version claire, fond transparent)"
+      },
+      {
+        "type": "url",
+        "id": "universe_4_url",
+        "label": "Page d'atterrissage de la marque",
+        "info": "Créez une page avec le modèle « page.univers » ou une collection avec « collection.univers »."
+      },
+      {
+        "type": "collection",
+        "id": "universe_4_collection",
+        "label": "Collection de la marque"
+      },
+      {
+        "type": "header",
+        "content": "Comportement"
+      },
+      {
+        "type": "checkbox",
+        "id": "universe_persist",
+        "label": "Garder l'habillage de la marque pendant toute la visite",
+        "default": true,
+        "info": "Le visiteur arrivé via Best Sport garde le logo et les couleurs Best Sport en naviguant."
+      }
+    ]
+  },
+  {
+    "name": "Cartes produit",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Afficher le badge de marque",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_second_image",
+        "label": "Deuxième image au survol",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_quick_add",
+        "label": "Ajout rapide au panier",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "card_ratio",
+        "label": "Format des images",
+        "default": "portrait",
+        "options": [
+          {
+            "value": "square",
+            "label": "Carré"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait"
+          },
+          {
+            "value": "adapt",
+            "label": "Adapté à l'image"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": "Badges automatiques : tag « __label:New » → NOUVEAU, tag « __label2:Made in EU » → MADE IN EU, prix barré → -XX %, stock faible → derniers articles."
+      },
+      {
+        "type": "range",
+        "id": "low_stock_threshold",
+        "label": "Seuil « stock faible »",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "default": 3
+      }
+    ]
+  },
+  {
+    "name": "Panier",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Type de panier",
+        "default": "drawer",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Tiroir latéral"
+          },
+          {
+            "value": "page",
+            "label": "Page panier"
+          }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Seuil livraison offerte (€)",
+        "default": 69,
+        "info": "Affiche une barre de progression motivante. 0 pour désactiver."
+      },
+      {
+        "type": "collection",
+        "id": "cart_upsell_collection",
+        "label": "Collection « complétez votre équipement »",
+        "info": "Ex. bandages, protège-dents, cordes à sauter."
+      },
+      {
+        "type": "richtext",
+        "id": "cart_reassurance",
+        "label": "Réassurance",
+        "default": "<p>Paiement sécurisé · Retours 30 jours · Expédition 24/48h</p>"
+      }
+    ]
+  },
+  {
+    "name": "Réseaux sociaux",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "YouTube"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok",
+        "label": "TikTok"
+      }
+    ]
+  }
+]

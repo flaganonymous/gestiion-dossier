@@ -1,0 +1,216 @@
+{%- liquid
+  assign menu = section.settings.menu
+-%}
+{%- if section.settings.show_brand_bar -%}
+  <div class="brand-bar">
+    <div class="page-width brand-bar__inner">
+      <span class="brand-bar__label">{{ section.settings.brand_bar_label }}</span>
+      <nav class="brand-bar__list" aria-label="{{ section.settings.brand_bar_label | escape }}">
+        <a href="{{ routes.root_url }}?univers=reset" data-brand-link="0">{{ shop.name }}</a>
+        {%- for i in (1..4) -%}
+          {%- liquid
+            assign key_name = 'universe_' | append: i | append: '_name'
+            assign key_handle = 'universe_' | append: i | append: '_handle'
+            assign key_url = 'universe_' | append: i | append: '_url'
+            assign key_collection = 'universe_' | append: i | append: '_collection'
+            assign key_accent = 'universe_' | append: i | append: '_accent'
+            assign u_url = settings[key_url] | default: settings[key_collection].url
+            assign u_handle = settings[key_handle] | default: settings[key_name] | handleize
+          -%}
+          {%- if settings[key_name] != blank and u_url != blank -%}
+            <a href="{{ u_url }}?univers={{ u_handle }}" data-brand-link="{{ i }}" style="--u-accent: {{ settings[key_accent] }};">{{ settings[key_name] }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </div>
+  </div>
+{%- endif -%}
+
+<div class="header-wrapper{% if section.settings.transparent %} header-wrapper--transparent header-wrapper--overlay{% endif %}" data-header>
+  <header class="page-width header">
+    <button type="button" class="header__icon header__burger" data-menu-open aria-label="{{ 'general.menu' | t }}">
+      {% render 'icon', name: 'menu' %}
+    </button>
+
+    <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name }}">
+      <span data-logo-universe="0" style="--logo-w: {{ section.settings.logo_width }}px">
+        {%- if section.settings.logo -%}
+          {{ section.settings.logo | image_url: width: 400 | image_tag: alt: shop.name, class: 'header__logo-img' }}
+        {%- else -%}
+          <span class="header__logo-text">{{ shop.name | split: ' ' | first }}<span>{{ shop.name | split: ' ' | slice: 1, 3 | join: ' ' | prepend: ' ' }}</span></span>
+        {%- endif -%}
+      </span>
+      {%- for i in (1..4) -%}
+        {%- assign key_name = 'universe_' | append: i | append: '_name' -%}
+        {%- assign key_logo = 'universe_' | append: i | append: '_logo' -%}
+        {%- if settings[key_name] != blank -%}
+          <span data-logo-universe="{{ i }}">
+            {%- if settings[key_logo] != blank -%}
+              {{ settings[key_logo] | image_url: width: 400 | image_tag: alt: settings[key_name], loading: 'lazy', class: 'header__logo-img' }}
+            {%- else -%}
+              <span class="header__logo-text">{{ settings[key_name] }}<span>.</span></span>
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
+    </a>
+
+    <nav class="header__nav" aria-label="{{ 'general.main_menu' | t }}">
+      <ul>
+        {%- for link in menu.links -%}
+          {%- liquid
+            assign is_mega = false
+            for child in link.links
+              if child.links.size > 0
+                assign is_mega = true
+              endif
+            endfor
+            assign highlight = false
+            assign title_down = link.title | downcase
+            if section.settings.highlight_item != blank
+              assign highlight_down = section.settings.highlight_item | downcase
+              if title_down == highlight_down
+                assign highlight = true
+              endif
+            endif
+          -%}
+          <li class="{% if link.links.size > 0 %}has-mega{% endif %}{% if highlight %} header__nav-item--highlight{% endif %}">
+            <a href="{{ link.url }}" {% if link.current %}aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- if link.links.size > 0 -%}
+              <div class="mega">
+                <div class="page-width mega__inner">
+                  {%- if is_mega -%}
+                    {%- for child in link.links limit: 4 -%}
+                      <div class="mega__col">
+                        <h4><a href="{{ child.url }}">{{ child.title }}</a></h4>
+                        <ul>
+                          {%- for grandchild in child.links -%}
+                            <li><a href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                    {%- endfor -%}
+                  {%- else -%}
+                    <div class="mega__col" style="grid-column: span 4">
+                      <h4>{{ link.title }}</h4>
+                      <ul style="grid-template-columns: repeat(3, 1fr); column-gap: 2rem;">
+                        {%- for child in link.links -%}
+                          <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  {%- endif -%}
+                  {%- if section.settings.mega_image != blank -%}
+                    <a class="mega__feature" href="{{ section.settings.mega_link }}">
+                      {{ section.settings.mega_image | image_url: width: 700 | image_tag: loading: 'lazy', alt: section.settings.mega_title }}
+                      <span>{{ section.settings.mega_title }}</span>
+                    </a>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header__icons">
+      <button type="button" class="header__icon" data-search-open aria-label="{{ 'general.search' | t }}">{% render 'icon', name: 'search' %}</button>
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="header__icon" href="{{ routes.account_url }}" aria-label="{{ 'general.account' | t }}">{% render 'icon', name: 'account' %}</a>
+      {%- endif -%}
+      <a class="header__icon" href="{{ routes.cart_url }}" data-cart-open aria-label="{{ 'general.cart' | t }}">
+        {% render 'icon', name: 'cart' %}
+        <span class="cart-count" data-cart-count>{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span>
+      </a>
+    </div>
+  </header>
+</div>
+
+{%- comment -%} Menu mobile {%- endcomment -%}
+<div class="menu-drawer" data-menu-drawer>
+  <div class="menu-drawer__overlay" data-menu-close></div>
+  <div class="menu-drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.menu' | t }}">
+    <div class="menu-drawer__head">
+      <span class="header__logo-text">{{ shop.name }}</span>
+      <button type="button" class="header__icon" data-menu-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <nav>
+      {%- for link in menu.links -%}
+        {%- if link.links.size > 0 -%}
+          <details>
+            <summary>{{ link.title }} {% render 'icon', name: 'plus' %}</summary>
+            <ul>
+              <li><a href="{{ link.url }}">{{ 'general.view_all' | t }}</a></li>
+              {%- for child in link.links -%}
+                <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- else -%}
+          <a class="menu-drawer__link" href="{{ link.url }}">{{ link.title }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+    <div class="menu-drawer__universes">
+      {%- for i in (1..4) -%}
+        {%- liquid
+          assign key_name = 'universe_' | append: i | append: '_name'
+          assign key_url = 'universe_' | append: i | append: '_url'
+          assign key_collection = 'universe_' | append: i | append: '_collection'
+          assign key_accent = 'universe_' | append: i | append: '_accent'
+          assign key_handle = 'universe_' | append: i | append: '_handle'
+          assign u_url = settings[key_url] | default: settings[key_collection].url
+          assign u_handle = settings[key_handle] | default: settings[key_name] | handleize
+        -%}
+        {%- if settings[key_name] != blank and u_url != blank -%}
+          <a href="{{ u_url }}?univers={{ u_handle }}" style="--u-accent: {{ settings[key_accent] }}">{{ settings[key_name] }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Recherche prédictive {%- endcomment -%}
+<div class="search-overlay" data-search-overlay role="dialog" aria-modal="true" aria-label="{{ 'general.search' | t }}">
+  <button type="button" class="header__icon search-overlay__close" data-search-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  <div class="page-width">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-overlay__form">
+      {% render 'icon', name: 'search' %}
+      <input type="search" name="q" placeholder="{{ 'general.search_placeholder' | t }}" autocomplete="off" data-search-input aria-label="{{ 'general.search' | t }}">
+      <input type="hidden" name="options[prefix]" value="last">
+    </form>
+    {%- if section.settings.search_suggestions != blank -%}
+      <div class="search-suggest">
+        {%- assign suggestions = section.settings.search_suggestions | split: ',' -%}
+        {%- for s in suggestions -%}
+          <a href="{{ routes.search_url }}?q={{ s | strip | url_encode }}">{{ s | strip }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    <div class="search-results" data-search-results></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "En-tête",
+  "class": "section-header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo du site (version claire)" },
+    { "type": "range", "id": "logo_width", "label": "Largeur du logo", "min": 60, "max": 260, "step": 5, "unit": "px", "default": 140 },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "highlight_item", "label": "Élément du menu à mettre en rouge", "default": "Promos", "info": "Ex. Promos, Black Friday, Nouveautés" },
+    { "type": "checkbox", "id": "transparent", "label": "En-tête transparent sur la page d'accueil", "default": true },
+    { "type": "header", "content": "Barre des marques" },
+    { "type": "checkbox", "id": "show_brand_bar", "label": "Afficher la barre des marques", "default": true, "info": "Liste les univers déclarés dans Paramètres du thème > Univers & marques." },
+    { "type": "text", "id": "brand_bar_label", "label": "Intitulé", "default": "Nos marques" },
+    { "type": "header", "content": "Méga-menu" },
+    { "type": "image_picker", "id": "mega_image", "label": "Image mise en avant" },
+    { "type": "text", "id": "mega_title", "label": "Titre de l'image", "default": "Nouvelle collection" },
+    { "type": "url", "id": "mega_link", "label": "Lien" },
+    { "type": "header", "content": "Recherche" },
+    { "type": "text", "id": "search_suggestions", "label": "Recherches populaires", "default": "Gants de boxe, Protège-tibias, Sac de frappe, Kimono, Casque", "info": "Séparées par des virgules." }
+  ]
+}
+{% endschema %}

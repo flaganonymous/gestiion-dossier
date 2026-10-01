@@ -1,0 +1,95 @@
+{%- comment -%}
+  « Choisis ton univers » — panneaux de marques qui s'ouvrent au survol.
+  Chaque bloc reprend nom / couleur / logo / lien depuis Paramètres du thème > Univers & marques.
+{%- endcomment -%}
+<section class="section" id="univers-{{ section.id }}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2>{{ section.settings.title }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="universes">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign i = block.settings.universe
+          assign key_name = 'universe_' | append: i | append: '_name'
+          assign key_tagline = 'universe_' | append: i | append: '_tagline'
+          assign key_accent = 'universe_' | append: i | append: '_accent'
+          assign key_logo = 'universe_' | append: i | append: '_logo'
+          assign key_url = 'universe_' | append: i | append: '_url'
+          assign key_collection = 'universe_' | append: i | append: '_collection'
+          assign key_handle = 'universe_' | append: i | append: '_handle'
+          assign u_name = settings[key_name]
+          assign u_url = settings[key_url] | default: settings[key_collection].url | default: '#'
+          assign u_handle = settings[key_handle] | default: u_name | handleize
+          assign u_image = block.settings.image | default: settings[key_collection].featured_image
+          assign tagline = block.settings.tagline | default: settings[key_tagline]
+        -%}
+        {%- if u_name != blank -%}
+          <a class="universe{% if block.settings.featured %} universe--featured{% endif %}" href="{{ u_url }}?univers={{ u_handle }}" style="--u-accent: {{ settings[key_accent] }}{% if block.settings.featured %}; flex: 1.6{% endif %}" {{ block.shopify_attributes }}>
+            <div class="universe__media">
+              {%- if block.settings.video != blank -%}
+                {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false }}
+              {%- elsif u_image != blank -%}
+                {{ u_image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(min-width: 800px) 50vw, 100vw', loading: 'lazy', alt: u_name }}
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+            <div class="universe__content">
+              <span class="universe__index">{{ forloop.index | prepend: '0' }} / {{ section.blocks.size | prepend: '0' }}</span>
+              {%- if settings[key_logo] != blank -%}
+                {{ settings[key_logo] | image_url: width: 400 | image_tag: class: 'universe__logo', loading: 'lazy', alt: u_name }}
+              {%- endif -%}
+              <h3 class="universe__name">{{ u_name }}</h3>
+              <p class="universe__tagline">{{ tagline }}</p>
+              <div class="universe__reveal">
+                <div>
+                  {%- if block.settings.description != blank -%}<p style="margin-top: 1rem; opacity: .85; max-width: 46ch;">{{ block.settings.description }}</p>{%- endif -%}
+                  <span class="btn">{{ block.settings.cta | default: 'Entrer dans l’univers' }} {% render 'icon', name: 'arrow' %}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Univers de marques",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Un site, plusieurs univers" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Choisis ton camp" },
+    { "type": "text", "id": "text", "label": "Texte", "default": "Fighter pour la puissance, Best Sport pour tous les sports, Daedo pour la précision du karaté. Un seul panier, une seule livraison." }
+  ],
+  "blocks": [
+    {
+      "type": "universe",
+      "name": "Univers",
+      "limit": 4,
+      "settings": [
+        { "type": "select", "id": "universe", "label": "Univers", "default": "1", "options": [
+          { "value": "1", "label": "Univers 1" }, { "value": "2", "label": "Univers 2" },
+          { "value": "3", "label": "Univers 3" }, { "value": "4", "label": "Univers 4" }
+        ], "info": "Configuré dans Paramètres du thème > Univers & marques." },
+        { "type": "checkbox", "id": "featured", "label": "Mettre en avant (plus large)", "default": false },
+        { "type": "image_picker", "id": "image", "label": "Image d'ambiance" },
+        { "type": "video", "id": "video", "label": "Vidéo d'ambiance (optionnel)" },
+        { "type": "text", "id": "tagline", "label": "Signature (sinon celle de l'univers)" },
+        { "type": "textarea", "id": "description", "label": "Description au survol" },
+        { "type": "text", "id": "cta", "label": "Bouton", "default": "Entrer dans l'univers" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Univers de marques", "blocks": [
+    { "type": "universe", "settings": { "universe": "1", "featured": true, "description": "Gants, protections, sacs de frappe, rings et cages. L'équipement des clubs et des combattants." } },
+    { "type": "universe", "settings": { "universe": "2", "description": "Tout le sport, pour tous les niveaux." } },
+    { "type": "universe", "settings": { "universe": "3", "description": "Karategis et protections homologués WKF." } }
+  ] }]
+}
+{% endschema %}

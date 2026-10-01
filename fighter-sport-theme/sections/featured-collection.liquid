@@ -1,0 +1,101 @@
+{%- comment -%}
+  Collection(s) mise(s) en avant — un onglet par bloc. Carrousel ou grille.
+{%- endcomment -%}
+{%- liquid
+  assign u_style = ''
+  assign u = section.settings.universe
+  if u == 'auto'
+    capture u
+      render 'universe-current', page: page, collection: collection, template_name: template.name
+    endcapture
+    assign u = u | strip | default: '0'
+  endif
+  assign u_collection = blank
+  if u != '0'
+    assign key_accent = 'universe_' | append: u | append: '_accent'
+    assign key_coll = 'universe_' | append: u | append: '_collection'
+    assign u_style = '--u-accent: ' | append: settings[key_accent] | append: ';'
+    assign u_collection = settings[key_coll]
+  endif
+-%}
+<section class="section{% if section.settings.light %} section--light{% endif %} u-accent-scope" style="{{ u_style }}" data-tabs>
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2>{{ section.settings.title }}</h2>
+      </div>
+      <div style="display:flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+        {%- if section.blocks.size > 1 -%}
+          <div class="tabs" role="tablist">
+            {%- for block in section.blocks -%}
+              <button type="button" role="tab" class="tabs__btn{% if forloop.first %} is-active{% endif %}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-tab="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                {{ block.settings.label | default: block.settings.collection.title }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.layout == 'slider' -%}
+          <div class="slider-nav" data-slider-nav>
+            <button type="button" data-prev aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'arrow' %}</button>
+            <button type="button" data-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'arrow' %}</button>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- for block in section.blocks -%}
+      {%- assign coll = block.settings.collection | default: u_collection -%}
+      <div class="tabs__panel" data-panel="{{ forloop.index0 }}" {% unless forloop.first %}hidden{% endunless %}>
+        <div class="{% if section.settings.layout == 'slider' %}slider{% else %}grid{% endif %}" style="--cols: {{ section.settings.columns }};" {% if section.settings.layout == 'slider' %}data-slider{% endif %}>
+          {%- if coll != blank and coll.products_count > 0 -%}
+            {%- for product in coll.products limit: section.settings.limit -%}
+              {% render 'product-card', product: product, index: forloop.index %}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for n in (1..4) -%}
+              <div class="card"><div class="card__media">{{ 'product-1' | placeholder_svg_tag }}</div><div class="card__info"><p class="card__title">Produit</p></div></div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        {%- if section.settings.layout == 'slider' -%}<div class="slider-progress"><span></span></div>{%- endif -%}
+        {%- if coll != blank and section.settings.view_all -%}
+          <div style="text-align:center; margin-top: 2.5rem;">
+            <a class="link-arrow" href="{{ coll.url }}">{{ 'general.view_all' | t }} — {{ coll.products_count }} {{ 'products.product.products' | t }} {% render 'icon', name: 'arrow' %}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Collection en vedette",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Les incontournables" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Le choix des combattants" },
+    { "type": "select", "id": "layout", "label": "Affichage", "default": "slider", "options": [
+      { "value": "slider", "label": "Carrousel" }, { "value": "grid", "label": "Grille" }
+    ] },
+    { "type": "range", "id": "columns", "label": "Colonnes (ordinateur)", "min": 3, "max": 5, "step": 1, "default": 4 },
+    { "type": "range", "id": "limit", "label": "Nombre de produits", "min": 4, "max": 24, "step": 1, "default": 12 },
+    { "type": "checkbox", "id": "view_all", "label": "Lien « tout voir »", "default": true },
+    { "type": "checkbox", "id": "light", "label": "Fond clair", "default": false },
+    { "type": "select", "id": "universe", "label": "Univers", "info": "Sur une page de marque, « Automatique » prend la couleur et la collection de la marque pour les onglets sans collection.", "default": "0", "options": [
+      { "value": "0", "label": "Couleur du site" }, { "value": "auto", "label": "Automatique (page de marque)" }, { "value": "1", "label": "Univers 1" }, { "value": "2", "label": "Univers 2" },
+      { "value": "3", "label": "Univers 3" }, { "value": "4", "label": "Univers 4" }
+    ] }
+  ],
+  "blocks": [
+    { "type": "collection", "name": "Onglet collection", "limit": 5, "settings": [
+      { "type": "collection", "id": "collection", "label": "Collection" },
+      { "type": "text", "id": "label", "label": "Nom de l'onglet" }
+    ] }
+  ],
+  "presets": [{ "name": "Collection en vedette", "blocks": [
+    { "type": "collection", "settings": { "label": "Best-sellers" } },
+    { "type": "collection", "settings": { "label": "Nouveautés" } },
+    { "type": "collection", "settings": { "label": "Promos" } }
+  ] }]
+}
+{% endschema %}

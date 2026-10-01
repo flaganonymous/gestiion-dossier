@@ -1,0 +1,32 @@
+{%- liquid
+  assign tilt = section.settings.tilt
+  assign tilt_abs = tilt | abs | times: 12
+-%}
+<section class="section--tight" style="overflow: hidden; padding-block: {{ tilt_abs | plus: 8 }}px;">
+  <div class="marquee-band{% if section.settings.reverse %} marquee--reverse{% endif %}" style="--mb-bg: {{ section.settings.bg }}; --mb-fg: {{ section.settings.fg }}; --mb-tilt: {{ tilt }}deg;">
+    <div class="marquee{% if section.settings.reverse %} marquee--reverse{% endif %}" style="--speed: {{ section.settings.speed }}s">
+      {%- for n in (1..2) -%}
+        <div class="marquee__track" {% if n == 2 %}aria-hidden="true"{% endif %}>
+          {%- assign words = section.settings.words | split: ',' -%}
+          {%- for w in words -%}
+            <span class="marquee__item">{{ w | strip }} {% render 'icon', name: 'star' %}</span>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Bandeau défilant XXL",
+  "settings": [
+    { "type": "text", "id": "words", "label": "Mots (séparés par des virgules)", "default": "Boxe, MMA, Muay Thaï, Karaté, Judo, JJB, Kick-boxing" },
+    { "type": "range", "id": "speed", "label": "Vitesse (s)", "min": 10, "max": 90, "step": 5, "default": 40 },
+    { "type": "range", "id": "tilt", "label": "Inclinaison", "min": -4, "max": 4, "step": 1, "unit": "°", "default": -2 },
+    { "type": "checkbox", "id": "reverse", "label": "Sens inverse", "default": false },
+    { "type": "color", "id": "bg", "label": "Fond", "default": "#E10600" },
+    { "type": "color", "id": "fg", "label": "Texte", "default": "#FFFFFF" }
+  ],
+  "presets": [{ "name": "Bandeau défilant XXL" }]
+}
+{% endschema %}

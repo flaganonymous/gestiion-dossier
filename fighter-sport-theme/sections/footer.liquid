@@ -1,0 +1,70 @@
+<footer class="footer">
+  <div class="page-width">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="header__logo-text">{{ shop.name }}</span>
+        {%- if section.settings.text != blank -%}<div class="rte muted" style="margin-top: 1rem; max-width: 40ch;">{{ section.settings.text }}</div>{%- endif -%}
+        <div class="footer__social">
+          {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}" aria-label="Instagram" target="_blank" rel="noopener">{% render 'icon', name: 'instagram' %}</a>{%- endif -%}
+          {%- if settings.social_facebook != blank -%}<a href="{{ settings.social_facebook }}" aria-label="Facebook" target="_blank" rel="noopener">{% render 'icon', name: 'facebook' %}</a>{%- endif -%}
+          {%- if settings.social_youtube != blank -%}<a href="{{ settings.social_youtube }}" aria-label="YouTube" target="_blank" rel="noopener">{% render 'icon', name: 'youtube' %}</a>{%- endif -%}
+          {%- if settings.social_tiktok != blank -%}<a href="{{ settings.social_tiktok }}" aria-label="TikTok" target="_blank" rel="noopener">{% render 'icon', name: 'tiktok' %}</a>{%- endif -%}
+        </div>
+      </div>
+      <div>
+        <h4>{{ section.settings.brands_title }}</h4>
+        <ul>
+          {%- for i in (1..4) -%}
+            {%- liquid
+              assign key_name = 'universe_' | append: i | append: '_name'
+              assign key_url = 'universe_' | append: i | append: '_url'
+              assign key_collection = 'universe_' | append: i | append: '_collection'
+              assign key_domain = 'universe_' | append: i | append: '_domain'
+              assign u_url = settings[key_url] | default: settings[key_collection].url
+            -%}
+            {%- if settings[key_name] != blank and u_url != blank -%}
+              <li><a href="{{ u_url }}">{{ settings[key_name] }}{% if settings[key_domain] != blank %} <span style="opacity:.5">— {{ settings[key_domain] }}</span>{% endif %}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }}>
+          <h4>{{ block.settings.title | default: block.settings.menu.title }}</h4>
+          <ul>
+            {%- for link in block.settings.menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- if section.settings.giant != blank -%}
+    {%- assign words = section.settings.giant | split: ' ' -%}
+    <div class="footer__giant" aria-hidden="true">{{ words | first }}{% if words.size > 1 %}<span>{{ words | slice: 1, 5 | join: ' ' | prepend: ' ' }}</span>{% endif %}</div>
+  {%- endif -%}
+  <div class="page-width footer__bottom">
+    <span>© {{ 'now' | date: '%Y' }} {{ shop.name }} — {{ powered_by_link }}</span>
+    <div class="payment-icons">
+      {%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag }}{%- endfor -%}
+    </div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Pied de page",
+  "settings": [
+    { "type": "richtext", "id": "text", "label": "Présentation", "default": "<p>Équipement de sports de combat et d'arts martiaux pour les clubs, les coachs et les combattants.</p>" },
+    { "type": "text", "id": "brands_title", "label": "Titre de la colonne marques", "default": "Nos marques" },
+    { "type": "text", "id": "giant", "label": "Texte géant", "default": "Fighter Sport" }
+  ],
+  "blocks": [
+    { "type": "menu", "name": "Menu", "limit": 3, "settings": [
+      { "type": "text", "id": "title", "label": "Titre" },
+      { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+    ] }
+  ],
+  "presets": [{ "name": "Pied de page" }]
+}
+{% endschema %}

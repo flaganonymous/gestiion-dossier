@@ -1,0 +1,33 @@
+<section class="section--tight{% if section.settings.surface %} section--surface{% endif %}" style="border-block: 1px solid var(--c-line);">
+  <div class="page-width trust">
+    {%- for block in section.blocks -%}
+      <div class="trust__item" {{ block.shopify_attributes }}>
+        {% render 'icon', name: block.settings.icon %}
+        <div><strong>{{ block.settings.title }}</strong><span>{{ block.settings.text }}</span></div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Réassurance",
+  "settings": [{ "type": "checkbox", "id": "surface", "label": "Fond contrasté", "default": true }],
+  "blocks": [
+    { "type": "item", "name": "Argument", "limit": 4, "settings": [
+      { "type": "select", "id": "icon", "label": "Icône", "default": "truck", "options": [
+        { "value": "truck", "label": "Livraison" }, { "value": "return", "label": "Retour" },
+        { "value": "shield", "label": "Sécurité" }, { "value": "eu", "label": "Europe" },
+        { "value": "chat", "label": "Conseil" }, { "value": "glove", "label": "Gant" }
+      ] },
+      { "type": "text", "id": "title", "label": "Titre", "default": "Livraison 24/48h" },
+      { "type": "text", "id": "text", "label": "Texte", "default": "Offerte dès 69 €" }
+    ] }
+  ],
+  "presets": [{ "name": "Réassurance", "blocks": [
+    { "type": "item", "settings": { "icon": "truck", "title": "Expédition 24/48h", "text": "Offerte dès 69 €" } },
+    { "type": "item", "settings": { "icon": "return", "title": "Retours 30 jours", "text": "Échange de taille gratuit" } },
+    { "type": "item", "settings": { "icon": "eu", "title": "Made in EU", "text": "Qualité professionnelle" } },
+    { "type": "item", "settings": { "icon": "chat", "title": "Conseil d'experts", "text": "Des pratiquants vous répondent" } }
+  ] }]
+}
+{% endschema %}

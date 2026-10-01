@@ -1,0 +1,22 @@
+<section class="section{% if section.settings.light %} section--light{% endif %}">
+  <div class="page-width rich-text" data-reveal>
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow" style="justify-content:center">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    {%- if section.settings.title != blank -%}<h2 class="h1">{{ section.settings.title }}</h2>{%- endif -%}
+    {%- if section.settings.text != blank -%}<div class="rte rich-text__body">{{ section.settings.text }}</div>{%- endif -%}
+    {%- if section.settings.cta_label != blank -%}<a class="btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>{%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Texte",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "No pain, no gain" },
+    { "type": "richtext", "id": "text", "label": "Texte" },
+    { "type": "text", "id": "cta_label", "label": "Bouton" },
+    { "type": "url", "id": "cta_link", "label": "Lien" },
+    { "type": "checkbox", "id": "light", "label": "Fond clair", "default": false }
+  ],
+  "presets": [{ "name": "Texte" }]
+}
+{% endschema %}

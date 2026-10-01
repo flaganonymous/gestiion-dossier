@@ -1,0 +1,33 @@
+<section class="section page-width" data-cart-page>
+  <h1 class="h1">{{ 'general.cart' | t }}</h1>
+  {%- if cart.item_count > 0 -%}
+    <div class="cart-page">
+      <div>
+        {% render 'shipping-progress' %}
+        {% render 'cart-items' %}
+      </div>
+      <form action="{{ routes.cart_url }}" method="post" class="cart-summary">
+        <div class="cart-total"><span>{{ 'cart.total' | t }}</span><span>{{ cart.total_price | money }}</span></div>
+        <p class="cart-note">{{ 'cart.taxes' | t }}</p>
+        {%- if section.settings.show_note -%}
+          <label for="CartNote" class="muted" style="font-size: .85rem">{{ 'cart.note' | t }}</label>
+          <textarea id="CartNote" name="note">{{ cart.note }}</textarea>
+        {%- endif -%}
+        <button type="submit" name="checkout" class="btn btn--block">{{ 'cart.checkout' | t }} {% render 'icon', name: 'arrow' %}</button>
+        {%- if additional_checkout_buttons -%}<div>{{ content_for_additional_checkout_buttons }}</div>{%- endif -%}
+        <div class="cart-note rte">{{ settings.cart_reassurance }}</div>
+      </form>
+    </div>
+  {%- else -%}
+    <div class="cart-empty">
+      <p class="h2">{{ 'cart.empty' | t }}</p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+    </div>
+  {%- endif -%}
+</section>
+{% schema %}
+{
+  "name": "Panier",
+  "settings": [{ "type": "checkbox", "id": "show_note", "label": "Note de commande", "default": true }]
+}
+{% endschema %}

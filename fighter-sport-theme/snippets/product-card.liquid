@@ -1,0 +1,126 @@
+{%- comment -%}
+  Carte produit : badges automatiques, badge marque/univers, 2e image au survol, ajout rapide.
+  Usage : {% render 'product-card', product: product, index: forloop.index %}
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  capture u_index
+    render 'universe-index', vendor: product.vendor
+  endcapture
+  assign u_index = u_index | strip
+  assign u_accent = blank
+  assign u_name = blank
+  if u_index != blank
+    assign key_accent = 'universe_' | append: u_index | append: '_accent'
+    assign key_name = 'universe_' | append: u_index | append: '_name'
+    assign u_accent = settings[key_accent]
+    assign u_name = settings[key_name]
+  endif
+
+  assign ratio = '4/5'
+  if settings.card_ratio == 'square'
+    assign ratio = '1/1'
+  elsif settings.card_ratio == 'adapt' and product.featured_media
+    assign ratio = product.featured_media.aspect_ratio
+  endif
+
+  assign is_new = false
+  assign is_eu = false
+  for tag in product.tags
+    assign t = tag | downcase
+    if t == '__label:new' or t == 'new' or t == 'nouveau'
+      assign is_new = true
+    endif
+    if t contains 'made in eu'
+      assign is_eu = true
+    endif
+  endfor
+
+  assign discount = 0
+  if product.compare_at_price_min > product.price_min
+    assign diff = product.compare_at_price_min | minus: product.price_min
+    assign discount = diff | times: 100.0 | divided_by: product.compare_at_price_min | round
+  endif
+
+  assign stock = 0
+  for v in product.variants
+    if v.inventory_management == 'shopify' and v.inventory_quantity > 0
+      assign stock = stock | plus: v.inventory_quantity
+    endif
+  endfor
+
+  assign single_option = false
+  if product.options.size == 1 and product.has_only_default_variant == false and product.variants.size <= 10
+    assign single_option = true
+  endif
+-%}
+<article class="card" data-reveal style="--d: {{ index | modulo: 4 }};{% if u_accent %} --u-accent: {{ u_accent }};{% endif %}">
+  <div class="card__media{% if settings.card_ratio == 'square' %} card__media--contain{% endif %}" style="--ratio: {{ ratio }};">
+    <div class="card__badges">
+      {%- if product.available == false -%}
+        <span class="badge badge--soldout">{{ 'products.product.sold_out' | t }}</span>
+      {%- else -%}
+        {%- if discount > 0 -%}<span class="badge badge--sale">-{{ discount }}%</span>{%- endif -%}
+        {%- if is_new -%}<span class="badge badge--new">{{ 'products.badges.new' | t }}</span>{%- endif -%}
+        {%- if is_eu -%}<span class="badge badge--eu">Made in EU</span>{%- endif -%}
+        {%- if stock > 0 and stock <= settings.low_stock_threshold -%}
+          <span class="badge badge--low">{{ 'products.badges.last_items' | t }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if settings.card_show_vendor and u_name != blank -%}
+      <span class="card__brand">{{ u_name }}</span>
+    {%- endif -%}
+
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 900 | image_tag:
+        widths: '300, 450, 600, 750, 900',
+        sizes: '(min-width: 1100px) 25vw, (min-width: 750px) 33vw, 50vw',
+        loading: 'lazy',
+        alt: product.featured_media.alt | default: product.title
+      }}
+      {%- if settings.card_second_image and product.media.size > 1 -%}
+        {{ product.media[1] | image_url: width: 900 | image_tag:
+          widths: '300, 450, 600, 750, 900',
+          sizes: '(min-width: 1100px) 25vw, (min-width: 750px) 33vw, 50vw',
+          loading: 'lazy',
+          alt: ''
+        }}
+      {%- endif -%}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag }}
+    {%- endif -%}
+
+    {%- if settings.card_quick_add and product.available -%}
+      <div class="card__quick">
+        {%- if product.has_only_default_variant -%}
+          <button type="button" class="btn" data-quick-add="{{ variant.id }}">{{ 'products.product.add_to_cart' | t }}</button>
+        {%- elsif single_option -%}
+          <div class="card__quick-sizes" role="group" aria-label="{{ product.options.first | escape }}">
+            {%- for v in product.variants -%}
+              <button type="button" data-quick-add="{{ v.id }}" {% unless v.available %}disabled{% endunless %} aria-label="{{ 'products.product.add_to_cart' | t }} — {{ v.title | escape }}">{{ v.title }}</button>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <a class="btn" href="{{ product.url }}">{{ 'products.product.choose_options' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="card__info">
+    <h3 class="card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {% render 'price', product: product, show_from: true %}
+    {%- assign color_option = product.options_with_values | where: 'name', 'Couleur' | first -%}
+    {%- unless color_option -%}{%- assign color_option = product.options_with_values | where: 'name', 'Color' | first -%}{%- endunless -%}
+    {%- if color_option and color_option.values.size > 1 -%}
+      <div class="card__swatches" aria-label="{{ color_option.values.size }} {{ 'products.product.colors' | t }}">
+        {%- for value in color_option.values limit: 6 -%}
+          {%- assign sw = value.swatch.color | default: value | downcase | replace: 'noir', 'black' | replace: 'blanc', 'white' | replace: 'rouge', 'red' | replace: 'bleu', 'blue' | replace: 'vert', 'green' | replace: 'gris', 'grey' | replace: 'rose', 'pink' | replace: 'jaune', 'yellow' | replace: 'doré', 'goldenrod' | split: '/' | first | strip -%}
+          <span style="--sw: {{ sw }};" title="{{ value | escape }}"></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</article>

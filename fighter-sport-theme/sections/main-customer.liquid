@@ -1,0 +1,84 @@
+{%- comment -%} Comptes clients (ancien système). Avec les nouveaux comptes clients Shopify, ces pages ne sont pas utilisées. {%- endcomment -%}
+<section class="section page-width">
+  <div class="page-content" style="max-width: 560px">
+    {%- case template.name -%}
+      {%- when 'login' -%}
+        <h1 class="h1">Connexion</h1>
+        {%- form 'customer_login' -%}
+          {{ form.errors | default_errors }}
+          <div class="form-field"><label for="em">E-mail</label><input id="em" type="email" name="customer[email]" autocomplete="email" required></div>
+          <div class="form-field"><label for="pw">Mot de passe</label><input id="pw" type="password" name="customer[password]" autocomplete="current-password" required></div>
+          <button class="btn btn--block" type="submit">Se connecter</button>
+          <p style="margin-top:1rem"><a href="#recover" class="muted">Mot de passe oublié ?</a> · <a href="{{ routes.account_register_url }}">Créer un compte</a></p>
+        {%- endform -%}
+        <div id="recover" style="margin-top: 3rem">
+          <h2 class="h3">Réinitialiser le mot de passe</h2>
+          {%- form 'recover_customer_password' -%}
+            {%- if form.posted_successfully? -%}<p class="form-message form-message--success">E-mail envoyé.</p>{%- endif -%}
+            <div class="form-field"><label for="rem">E-mail</label><input id="rem" type="email" name="email" required></div>
+            <button class="btn btn--ghost" type="submit">Envoyer</button>
+          {%- endform -%}
+        </div>
+      {%- when 'register' -%}
+        <h1 class="h1">Rejoins le clan</h1>
+        {%- form 'create_customer' -%}
+          {{ form.errors | default_errors }}
+          <div class="form-field"><label for="fn">Prénom</label><input id="fn" name="customer[first_name]" autocomplete="given-name"></div>
+          <div class="form-field"><label for="ln">Nom</label><input id="ln" name="customer[last_name]" autocomplete="family-name"></div>
+          <div class="form-field"><label for="em2">E-mail</label><input id="em2" type="email" name="customer[email]" required autocomplete="email"></div>
+          <div class="form-field"><label for="pw2">Mot de passe</label><input id="pw2" type="password" name="customer[password]" required autocomplete="new-password"></div>
+          <button class="btn btn--block" type="submit">Créer mon compte</button>
+        {%- endform -%}
+      {%- when 'account' -%}
+        <h1 class="h1">Salut {{ customer.first_name }}</h1>
+        <p><a class="link-arrow" href="{{ routes.account_addresses_url }}">Mes adresses</a> &nbsp; <a class="link-arrow" href="{{ routes.account_logout_url }}">Déconnexion</a></p>
+        <h2 class="h3" style="margin-top:2rem">Mes commandes</h2>
+        {%- if customer.orders.size > 0 -%}
+          <table class="table"><thead><tr><th>Commande</th><th>Date</th><th>Statut</th><th>Total</th></tr></thead><tbody>
+            {%- for order in customer.orders -%}
+              <tr><td><a href="{{ order.customer_url }}">{{ order.name }}</a></td><td>{{ order.created_at | date: '%d/%m/%Y' }}</td><td>{{ order.fulfillment_status_label }}</td><td>{{ order.total_price | money }}</td></tr>
+            {%- endfor -%}
+          </tbody></table>
+        {%- else -%}<p class="muted">Aucune commande pour l'instant.</p>{%- endif -%}
+      {%- when 'order' -%}
+        <h1 class="h1">Commande {{ order.name }}</h1>
+        <table class="table"><tbody>
+          {%- for item in order.line_items -%}<tr><td>{{ item.title }} × {{ item.quantity }}</td><td>{{ item.final_line_price | money }}</td></tr>{%- endfor -%}
+          <tr><th>Total</th><th>{{ order.total_price | money }}</th></tr>
+        </tbody></table>
+        <p style="margin-top:1rem"><a class="link-arrow" href="{{ routes.account_url }}">Retour au compte</a></p>
+      {%- when 'addresses' -%}
+        <h1 class="h1">Mes adresses</h1>
+        {%- for address in customer.addresses -%}
+          <div class="perks" style="margin-bottom: 1rem">{{ address | format_address }}</div>
+        {%- endfor -%}
+        {%- form 'customer_address', customer.new_address -%}
+          <h2 class="h3">Nouvelle adresse</h2>
+          <div class="form-field"><label>Adresse</label><input name="address[address1]"></div>
+          <div class="form-field"><label>Code postal</label><input name="address[zip]"></div>
+          <div class="form-field"><label>Ville</label><input name="address[city]"></div>
+          <div class="form-field"><label>Pays</label><select name="address[country]">{{ all_country_option_tags }}</select></div>
+          <button class="btn" type="submit">Ajouter</button>
+        {%- endform -%}
+      {%- when 'reset_password' -%}
+        <h1 class="h1">Nouveau mot de passe</h1>
+        {%- form 'reset_customer_password' -%}
+          {{ form.errors | default_errors }}
+          <div class="form-field"><label for="np">Mot de passe</label><input id="np" type="password" name="customer[password]" required></div>
+          <div class="form-field"><label for="npc">Confirmation</label><input id="npc" type="password" name="customer[password_confirmation]" required></div>
+          <button class="btn btn--block" type="submit">Valider</button>
+        {%- endform -%}
+      {%- when 'activate_account' -%}
+        <h1 class="h1">Activer mon compte</h1>
+        {%- form 'activate_customer_password' -%}
+          {{ form.errors | default_errors }}
+          <div class="form-field"><label for="ap">Mot de passe</label><input id="ap" type="password" name="customer[password]" required></div>
+          <div class="form-field"><label for="apc">Confirmation</label><input id="apc" type="password" name="customer[password_confirmation]" required></div>
+          <button class="btn btn--block" type="submit">Activer</button>
+        {%- endform -%}
+    {%- endcase -%}
+  </div>
+</section>
+{% schema %}
+{ "name": "Compte client", "settings": [] }
+{% endschema %}

@@ -1,0 +1,16 @@
+{
+  "type": "footer",
+  "name": "Groupe pied de page",
+  "sections": {
+    "newsletter": { "type": "newsletter", "settings": {} },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu1": { "type": "menu", "settings": { "title": "Aide", "menu": "footer" } }
+      },
+      "block_order": ["menu1"],
+      "settings": {}
+    }
+  },
+  "order": ["newsletter", "footer"]
+}

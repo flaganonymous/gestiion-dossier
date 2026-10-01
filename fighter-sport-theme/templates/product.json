@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "brand": { "type": "brand" },
+        "title": { "type": "title" },
+        "price": { "type": "price" },
+        "picker": { "type": "variant_picker", "settings": { "color_swatches": false } },
+        "stock": { "type": "stock" },
+        "buy": { "type": "buy_buttons", "settings": { "dynamic_checkout": true } },
+        "perks": { "type": "perks" },
+        "desc": { "type": "description" },
+        "shipping": { "type": "collapsible", "settings": { "heading": "Livraison & retours", "content": "<p>Expédition sous 24/48h depuis la France. Livraison offerte dès 69 €. Retours et échanges sous 30 jours.</p>" } }
+      },
+      "block_order": ["brand", "title", "price", "picker", "stock", "buy", "perks", "desc", "shipping"],
+      "settings": { "sticky_atc": true }
+    },
+    "recommendations": { "type": "product-recommendations", "settings": {} },
+    "trust": { "type": "trust-bar", "blocks": {
+        "i1": { "type": "item", "settings": { "icon": "truck", "title": "Expédition 24/48h", "text": "Offerte dès 69 €" } },
+        "i2": { "type": "item", "settings": { "icon": "return", "title": "Retours 30 jours", "text": "Échange de taille gratuit" } },
+        "i3": { "type": "item", "settings": { "icon": "eu", "title": "Made in EU", "text": "Qualité professionnelle" } },
+        "i4": { "type": "item", "settings": { "icon": "chat", "title": "Conseil d'experts", "text": "Des pratiquants vous répondent" } }
+      }, "block_order": ["i1", "i2", "i3", "i4"], "settings": {} }
+  },
+  "order": ["main", "recommendations", "trust"]
+}

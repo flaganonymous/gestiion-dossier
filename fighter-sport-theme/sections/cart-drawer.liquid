@@ -1,0 +1,65 @@
+<div class="drawer" data-cart-drawer>
+  <div class="drawer__overlay" data-cart-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.cart' | t }}">
+    <div class="drawer__head">
+      <h2>{{ 'general.cart' | t }} <span class="text-accent">({{ cart.item_count }})</span></h2>
+      <button type="button" class="header__icon" data-cart-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    {% render 'shipping-progress' %}
+    <div class="drawer__body">
+      {%- if cart.item_count > 0 -%}
+        {% render 'cart-items' %}
+        {%- assign upsell = settings.cart_upsell_collection -%}
+        {%- if upsell != blank and upsell.products_count > 0 -%}
+          <div class="upsell">
+            <h4>{{ 'cart.upsell' | t }}</h4>
+            <div class="upsell__list">
+              {%- assign shown = 0 -%}
+              {%- for p in upsell.products -%}
+                {%- assign in_cart = cart.items | where: 'product_id', p.id | size -%}
+                {%- if in_cart == 0 and p.available and shown < 6 -%}
+                  {%- assign shown = shown | plus: 1 -%}
+                  <div class="upsell__item">
+                    {%- if p.featured_media -%}{{ p.featured_media | image_url: width: 140 | image_tag: loading: 'lazy', alt: p.title }}{%- endif -%}
+                    <div>
+                      <p>{{ p.title | truncate: 46 }}</p>
+                      <p><strong>{{ p.price | money }}</strong></p>
+                      {%- if p.has_only_default_variant -%}
+                        <button type="button" data-quick-add="{{ p.selected_or_first_available_variant.id }}">+ {{ 'products.product.add' | t }}</button>
+                      {%- else -%}
+                        <a href="{{ p.url }}" style="color: var(--c-accent); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em;">{{ 'products.product.choose_options' | t }}</a>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="cart-empty">
+          <p class="h2">{{ 'cart.empty' | t }}</p>
+          <a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+    {%- if cart.item_count > 0 -%}
+      <div class="drawer__foot">
+        {%- if cart.cart_level_discount_applications.size > 0 -%}
+          {%- for d in cart.cart_level_discount_applications -%}
+            <div class="cart-total" style="font-size: .95rem"><span>{{ d.title }}</span><span>-{{ d.total_allocated_amount | money }}</span></div>
+          {%- endfor -%}
+        {%- endif -%}
+        <div class="cart-total"><span>{{ 'cart.total' | t }}</span><span>{{ cart.total_price | money }}</span></div>
+        <p class="cart-note">{{ 'cart.taxes' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post">
+          <button type="submit" name="checkout" class="btn btn--block">{{ 'cart.checkout' | t }} {% render 'icon', name: 'arrow' %}</button>
+        </form>
+        <div class="cart-note rte">{{ settings.cart_reassurance }}</div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Panier latéral", "settings": [] }
+{% endschema %}

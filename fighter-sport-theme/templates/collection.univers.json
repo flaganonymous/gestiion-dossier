@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "hero": { "type": "universe-hero", "settings": { "universe": "auto", "height": 65, "cta_label": "" } },
+    "main": { "type": "main-collection", "settings": { "show_header": false, "columns": 4 } }
+  },
+  "order": ["hero", "main"]
+}

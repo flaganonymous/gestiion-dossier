@@ -1,0 +1,37 @@
+<section class="section newsletter{% if section.settings.accent %} section--accent{% endif %}">
+  <div class="newsletter__giant" aria-hidden="true">{{ section.settings.giant }}</div>
+  <div class="page-width" data-reveal>
+    <p class="eyebrow" style="justify-content:center">{{ section.settings.eyebrow }}</p>
+    <h2 class="h1">{{ section.settings.title }}</h2>
+    <div class="rte muted" style="max-width: 52ch; margin: 0 auto;">{{ section.settings.text }}</div>
+    {%- form 'customer', class: 'newsletter__form-wrapper' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter{% if section.settings.tag != blank %},{{ section.settings.tag }}{% endif %}">
+      {%- if form.posted_successfully? -%}
+        <p class="form-message form-message--success">{{ section.settings.success }}</p>
+      {%- else -%}
+        <div class="newsletter__form">
+          <label class="visually-hidden" for="nl-{{ section.id }}">E-mail</label>
+          <input id="nl-{{ section.id }}" type="email" name="contact[email]" required placeholder="ton@email.fr" autocomplete="email">
+          <button class="btn" type="submit">{{ section.settings.button }}</button>
+        </div>
+        {%- if form.errors -%}<p class="form-message form-message--error">{{ form.errors | default_errors }}</p>{%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "giant", "label": "Mot géant", "default": "Fight club" },
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Rejoins le clan" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "-10 % sur ta 1re commande" },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Drops en avant-première, conseils d'entraînement et offres réservées aux membres.</p>" },
+    { "type": "text", "id": "button", "label": "Bouton", "default": "Je m'inscris" },
+    { "type": "text", "id": "success", "label": "Message de succès", "default": "Bienvenue dans le clan ! Ton code arrive par e-mail." },
+    { "type": "text", "id": "tag", "label": "Tag client additionnel", "info": "Ex. best-sport pour segmenter par marque." },
+    { "type": "checkbox", "id": "accent", "label": "Fond couleur d'accent", "default": false }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

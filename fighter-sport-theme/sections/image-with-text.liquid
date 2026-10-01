@@ -1,0 +1,35 @@
+<section class="section{% if section.settings.light %} section--light{% endif %}">
+  <div class="page-width iwt{% if section.settings.reverse %} iwt--reverse{% endif %}">
+    <div class="iwt__media" data-reveal>
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: widths: '600, 900, 1200, 1400', sizes: '(min-width: 900px) 50vw, 100vw', loading: 'lazy', alt: section.settings.image.alt }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag }}
+      {%- endif -%}
+    </div>
+    <div data-reveal style="--d: 2">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2>{{ section.settings.title }}</h2>
+      <div class="rte muted" style="font-size: 1.05rem">{{ section.settings.text }}</div>
+      {%- if section.settings.cta_label != blank -%}
+        <p style="margin-top: 2rem"><a class="btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow' %}</a></p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Image avec texte",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Notre histoire" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Né dans les salles de combat" },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Depuis plus de 30 ans, nous équipons clubs, coachs et combattants avec du matériel pensé pour durer.</p>" },
+    { "type": "text", "id": "cta_label", "label": "Bouton" },
+    { "type": "url", "id": "cta_link", "label": "Lien" },
+    { "type": "checkbox", "id": "reverse", "label": "Image à droite", "default": false },
+    { "type": "checkbox", "id": "light", "label": "Fond clair", "default": false }
+  ],
+  "presets": [{ "name": "Image avec texte" }]
+}
+{% endschema %}

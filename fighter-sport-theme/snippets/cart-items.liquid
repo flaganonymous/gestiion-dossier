@@ -1,0 +1,25 @@
+{%- comment -%} Liste des articles du panier (tiroir et page). {%- endcomment -%}
+{%- for item in cart.items -%}
+  <div class="cart-item" data-line="{{ forloop.index }}">
+    <a class="cart-item__img" href="{{ item.url }}">
+      {%- if item.image -%}{{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.title }}{%- endif -%}
+    </a>
+    <div>
+      <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+      {%- unless item.product.has_only_default_variant -%}<span class="cart-item__variant">{{ item.variant.title }}</span>{%- endunless -%}
+      {%- for prop in item.properties -%}
+        {%- unless prop.last == blank or prop.first contains '_' -%}<span class="cart-item__variant" style="display:block">{{ prop.first }} : {{ prop.last }}</span>{%- endunless -%}
+      {%- endfor -%}
+      <div class="qty">
+        <button type="button" data-line-change="{{ item.key }}" data-qty-target="{{ item.quantity | minus: 1 }}" aria-label="-">−</button>
+        <input type="number" value="{{ item.quantity }}" min="0" data-line-input="{{ item.key }}" aria-label="{{ 'products.product.quantity' | t }}">
+        <button type="button" data-line-change="{{ item.key }}" data-qty-target="{{ item.quantity | plus: 1 }}" aria-label="+">+</button>
+      </div>
+      <button type="button" class="cart-item__remove" data-line-change="{{ item.key }}" data-qty-target="0">{{ 'cart.remove' | t }}</button>
+    </div>
+    <div class="cart-item__price">
+      {%- if item.original_line_price > item.final_line_price -%}<s class="price__compare">{{ item.original_line_price | money }}</s><br>{%- endif -%}
+      {{ item.final_line_price | money }}
+    </div>
+  </div>
+{%- endfor -%}

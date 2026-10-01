@@ -1,0 +1,90 @@
+{%- comment -%}
+  En-tête de page de marque. À placer en haut des modèles page.univers / collection.univers.
+{%- endcomment -%}
+{%- liquid
+  assign i = section.settings.universe
+  if i == 'auto'
+    capture i
+      render 'universe-current', page: page, collection: collection, template_name: template.name
+    endcapture
+    assign i = i | strip | default: '1'
+  endif
+  assign key_name = 'universe_' | append: i | append: '_name'
+  assign key_tagline = 'universe_' | append: i | append: '_tagline'
+  assign key_accent = 'universe_' | append: i | append: '_accent'
+  assign key_logo = 'universe_' | append: i | append: '_logo'
+  assign key_collection = 'universe_' | append: i | append: '_collection'
+  assign u_name = settings[key_name] | default: shop.name
+  assign u_collection = settings[key_collection]
+  if template.name == 'collection'
+    assign u_collection = collection
+  endif
+  assign title = section.settings.title | default: settings[key_tagline] | default: u_name
+  assign bg = section.settings.image | default: u_collection.featured_image
+-%}
+<section class="u-hero u-accent-scope" style="--u-accent: {{ settings[key_accent] }}; --uh-h: {{ section.settings.height }}vh;">
+  <div class="u-hero__media">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false }}
+    {%- elsif bg != blank -%}
+      {{ bg | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 1920, 2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: u_name }}
+    {%- endif -%}
+  </div>
+  <div class="u-hero__giant" aria-hidden="true">{{ u_name }}</div>
+  <div class="page-width u-hero__inner">
+    {%- if settings[key_logo] != blank -%}
+      {{ settings[key_logo] | image_url: width: 500 | image_tag: class: 'u-hero__logo', alt: u_name }}
+    {%- else -%}
+      <p class="eyebrow">{{ u_name }}</p>
+    {%- endif -%}
+    <h1 class="h1" style="max-width: 14ch">{{ title }}</h1>
+    {%- if section.settings.text != blank -%}
+      <div class="u-hero__desc rte">{{ section.settings.text }}</div>
+    {%- elsif template.name == 'collection' and collection.description != blank -%}
+      <div class="u-hero__desc rte">{{ collection.description }}</div>
+    {%- endif -%}
+    <div style="display:flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;">
+      {%- if section.settings.cta_label != blank -%}
+        <a class="btn" href="{{ section.settings.cta_link | default: u_collection.url }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow' %}</a>
+      {%- endif -%}
+      {%- if section.settings.cta_2_label != blank -%}
+        <a class="btn btn--ghost" href="{{ section.settings.cta_2_link }}">{{ section.settings.cta_2_label }}</a>
+      {%- endif -%}
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <div class="u-hero__stats">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}><strong>{{ block.settings.value }}</strong><span>{{ block.settings.label }}</span></div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Héro de marque",
+  "settings": [
+    { "type": "select", "id": "universe", "label": "Univers", "default": "auto", "info": "Automatique : détecte la marque d'après la page / collection déclarée dans Paramètres du thème > Univers & marques.", "options": [
+      { "value": "auto", "label": "Automatique" },
+      { "value": "1", "label": "Univers 1" }, { "value": "2", "label": "Univers 2" },
+      { "value": "3", "label": "Univers 3" }, { "value": "4", "label": "Univers 4" }
+    ] },
+    { "type": "image_picker", "id": "image", "label": "Image de fond" },
+    { "type": "video", "id": "video", "label": "Vidéo de fond" },
+    { "type": "range", "id": "height", "label": "Hauteur", "min": 50, "max": 100, "step": 5, "unit": "vh", "default": 80 },
+    { "type": "text", "id": "title", "label": "Titre (sinon la signature de l'univers)" },
+    { "type": "richtext", "id": "text", "label": "Texte (sinon la description de la collection)" },
+    { "type": "text", "id": "cta_label", "label": "Bouton principal", "default": "Voir la gamme" },
+    { "type": "url", "id": "cta_link", "label": "Lien (sinon la collection de l'univers)" },
+    { "type": "text", "id": "cta_2_label", "label": "Bouton secondaire" },
+    { "type": "url", "id": "cta_2_link", "label": "Lien secondaire" }
+  ],
+  "blocks": [
+    { "type": "stat", "name": "Chiffre clé", "limit": 4, "settings": [
+      { "type": "text", "id": "value", "label": "Valeur", "default": "30 ans" },
+      { "type": "text", "id": "label", "label": "Libellé", "default": "d'expertise" }
+    ] }
+  ],
+  "presets": [{ "name": "Héro de marque" }]
+}
+{% endschema %}

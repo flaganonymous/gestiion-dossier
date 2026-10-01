@@ -1,0 +1,12 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_bg": "#0B0B0C",
+      "color_accent": "#E10600",
+      "universe_1_collection": "gants",
+      "free_shipping_threshold": 69,
+      "cart_upsell_collection": "bandages-pour-les-mains"
+    }
+  }
+}

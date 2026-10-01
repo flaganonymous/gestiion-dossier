@@ -1,0 +1,37 @@
+<section class="section{% if section.settings.light %} section--light{% endif %}">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <div class="section-head" data-reveal><h2>{{ section.settings.title }}</h2></div>
+    {%- endif -%}
+    <div class="stats" style="--cols: {{ section.blocks.size }}">
+      {%- for block in section.blocks -%}
+        <div class="stat" data-reveal style="--d: {{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <div class="stat__value"><span data-count="{{ block.settings.number }}">{{ block.settings.number }}</span><small>{{ block.settings.suffix }}</small></div>
+          <div class="stat__label">{{ block.settings.label }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Chiffres clés",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Titre", "default": "Le poids lourd du combat" },
+    { "type": "checkbox", "id": "light", "label": "Fond clair", "default": false }
+  ],
+  "blocks": [
+    { "type": "stat", "name": "Chiffre", "limit": 4, "settings": [
+      { "type": "number", "id": "number", "label": "Nombre", "default": 900 },
+      { "type": "text", "id": "suffix", "label": "Suffixe", "default": "+" },
+      { "type": "text", "id": "label", "label": "Libellé", "default": "références en stock" }
+    ] }
+  ],
+  "presets": [{ "name": "Chiffres clés", "blocks": [
+    { "type": "stat", "settings": { "number": 900, "suffix": "+", "label": "références" } },
+    { "type": "stat", "settings": { "number": 3, "suffix": "", "label": "marques, un seul panier" } },
+    { "type": "stat", "settings": { "number": 48, "suffix": "h", "label": "expédition" } },
+    { "type": "stat", "settings": { "number": 30, "suffix": "j", "label": "pour changer d'avis" } }
+  ] }]
+}
+{% endschema %}

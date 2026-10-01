@@ -1,0 +1,71 @@
+{%- liquid
+  assign lines = section.settings.title | newline_to_br | split: '<br />'
+-%}
+<section class="hero" style="--hero-h: {{ section.settings.height }}svh; --overlay: {{ section.settings.overlay }};">
+  <div class="hero__media">
+    {%- if section.settings.video != blank -%}
+      {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, image_size: '1920x' }}
+    {%- elsif section.settings.video_url != blank -%}
+      <video autoplay muted loop playsinline {% if section.settings.image %}poster="{{ section.settings.image | image_url: width: 1920 }}"{% endif %}>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {%- elsif section.settings.image != blank -%}
+      {{ section.settings.image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 1920, 2400', sizes: '100vw', fetchpriority: 'high', loading: 'eager', alt: section.settings.image.alt }}
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+  </div>
+  {%- if section.settings.slash -%}<div class="hero__slash" aria-hidden="true"></div>{%- endif -%}
+
+  {%- if section.settings.badge_text != blank -%}
+    <div class="hero__badge" aria-hidden="true">
+      <svg viewBox="0 0 120 120"><defs><path id="c-{{ section.id }}" d="M60 60m-48 0a48 48 0 1 1 96 0a48 48 0 1 1-96 0"/></defs><text><textPath href="#c-{{ section.id }}">{{ section.settings.badge_text }} • {{ section.settings.badge_text }} •</textPath></text></svg>
+      <div class="hero__badge-center">{% render 'icon', name: 'bolt' %}</div>
+    </div>
+  {%- endif -%}
+
+  <div class="page-width hero__inner">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <h1 class="hero__title h0">
+      {%- for line in lines -%}
+        <span class="line"><span style="--i: {{ forloop.index0 }}" class="{% if forloop.index == section.settings.outline_line %}text-outline{% endif %}{% if forloop.index == section.settings.accent_line %} text-accent{% endif %}">{{ line | strip }}</span></span>
+      {%- endfor -%}
+    </h1>
+    <div class="hero__bottom">
+      {%- if section.settings.text != blank -%}<div class="hero__text rte">{{ section.settings.text }}</div>{%- endif -%}
+      <div class="hero__ctas">
+        {%- if section.settings.cta_1_label != blank -%}
+          <a class="btn" href="{{ section.settings.cta_1_link }}">{{ section.settings.cta_1_label }} {% render 'icon', name: 'arrow' %}</a>
+        {%- endif -%}
+        {%- if section.settings.cta_2_label != blank -%}
+          <a class="btn btn--ghost" href="{{ section.settings.cta_2_link }}">{{ section.settings.cta_2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  <span class="hero__scroll" aria-hidden="true"></span>
+</section>
+{% schema %}
+{
+  "name": "Héro cinématique",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image (et image de secours de la vidéo)" },
+    { "type": "video", "id": "video", "label": "Vidéo (hébergée sur Shopify)" },
+    { "type": "url", "id": "video_url", "label": "…ou URL d'un fichier MP4" },
+    { "type": "range", "id": "overlay", "label": "Assombrissement", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 45 },
+    { "type": "range", "id": "height", "label": "Hauteur", "min": 60, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "checkbox", "id": "slash", "label": "Bande diagonale rouge", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Nouvelle saison — Fighter 2026" },
+    { "type": "textarea", "id": "title", "label": "Titre (une ligne par retour à la ligne)", "default": "Entraîne-toi\ncomme\nun champion" },
+    { "type": "range", "id": "outline_line", "label": "Ligne en contour", "min": 0, "max": 4, "step": 1, "default": 2, "info": "0 = aucune" },
+    { "type": "range", "id": "accent_line", "label": "Ligne en couleur d'accent", "min": 0, "max": 4, "step": 1, "default": 3 },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Gants, protections, sacs de frappe, rings : l'équipement Fighter conçu en Europe pour ceux qui ne lâchent rien.</p>" },
+    { "type": "text", "id": "cta_1_label", "label": "Bouton 1", "default": "Découvrir Fighter" },
+    { "type": "url", "id": "cta_1_link", "label": "Lien 1" },
+    { "type": "text", "id": "cta_2_label", "label": "Bouton 2", "default": "Nouveautés" },
+    { "type": "url", "id": "cta_2_link", "label": "Lien 2" },
+    { "type": "text", "id": "badge_text", "label": "Badge rotatif", "default": "Made in EU — Pro grade" }
+  ],
+  "presets": [{ "name": "Héro cinématique" }]
+}
+{% endschema %}

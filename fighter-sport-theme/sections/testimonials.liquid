@@ -1,0 +1,56 @@
+<section class="section{% if section.settings.light %} section--light{% endif %}">
+  <div class="page-width">
+    <div class="section-head" data-reveal>
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2>{{ section.settings.title }}</h2>
+      </div>
+      {%- if section.settings.rating != blank -%}
+        <div class="reviews-summary">
+          <span class="stars">{%- for n in (1..5) -%}{% render 'icon', name: 'star' %}{%- endfor -%}</span>
+          <span><strong>{{ section.settings.rating }}</strong> <span class="muted">{{ section.settings.rating_label }}</span></span>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="slider" style="--cols: {{ section.settings.columns }}">
+      {%- for block in section.blocks -%}
+        <figure class="athlete" data-reveal style="margin: 0; --d: {{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 800 | image_tag: widths: '400, 600, 800', sizes: '(min-width: 1100px) 25vw, 60vw', loading: 'lazy', alt: block.settings.name }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag }}
+          {%- endif -%}
+          <figcaption class="athlete__body">
+            <blockquote class="athlete__quote" style="margin:0 0 1rem">{{ block.settings.quote }}</blockquote>
+            <div class="athlete__name">{{ block.settings.name }}</div>
+            <div class="athlete__meta">{{ block.settings.meta }}</div>
+          </figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Ambassadeurs & avis",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Ils combattent avec nous" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Approuvé sur le ring" },
+    { "type": "text", "id": "rating", "label": "Note globale", "default": "4,8/5" },
+    { "type": "text", "id": "rating_label", "label": "Libellé de la note", "default": "sur +1 200 avis clients" },
+    { "type": "range", "id": "columns", "label": "Colonnes", "min": 2, "max": 4, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "light", "label": "Fond clair", "default": false }
+  ],
+  "blocks": [
+    { "type": "athlete", "name": "Témoignage", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Photo" },
+      { "type": "textarea", "id": "quote", "label": "Citation", "default": "Des gants qui tiennent la distance, round après round." },
+      { "type": "text", "id": "name", "label": "Nom", "default": "Prénom Nom" },
+      { "type": "text", "id": "meta", "label": "Discipline / titre", "default": "Boxe anglaise — Club" }
+    ] }
+  ],
+  "presets": [{ "name": "Ambassadeurs & avis", "blocks": [
+    { "type": "athlete" }, { "type": "athlete" }, { "type": "athlete" }, { "type": "athlete" }
+  ] }]
+}
+{% endschema %}

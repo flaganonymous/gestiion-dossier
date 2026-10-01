@@ -1,0 +1,31 @@
+<section class="section" data-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent={{ section.settings.intent }}">
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <div class="page-width">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+          <h2>{{ section.settings.title }}</h2>
+        </div>
+      </div>
+      <div class="slider" style="--cols: 4">
+        {%- for product in recommendations.products -%}
+          {% render 'product-card', product: product, index: forloop.index %}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+{% schema %}
+{
+  "name": "Recommandations",
+  "settings": [
+    { "type": "select", "id": "intent", "label": "Type", "default": "related", "options": [
+      { "value": "related", "label": "Produits similaires" },
+      { "value": "complementary", "label": "Produits complémentaires (Search & Discovery)" }
+    ] },
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Complète ton équipement" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Souvent achetés ensemble" },
+    { "type": "range", "id": "limit", "label": "Nombre de produits", "min": 2, "max": 12, "step": 1, "default": 8 }
+  ]
+}
+{% endschema %}

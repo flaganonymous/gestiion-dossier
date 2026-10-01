@@ -1,0 +1,46 @@
+<section class="section">
+  <div class="page-width">
+    <div class="drop" data-reveal>
+      <div class="drop__media">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 2000 | image_tag: sizes: '100vw', widths: '750, 1200, 2000', loading: 'lazy', alt: section.settings.title }}
+        {%- endif -%}
+      </div>
+      <div class="drop__inner">
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="h1">{{ section.settings.title }}</h2>
+        {%- if section.settings.text != blank -%}<div class="rte">{{ section.settings.text }}</div>{%- endif -%}
+        <div class="countdown" data-countdown="{{ section.settings.end_date }}T{{ section.settings.end_time | default: '23:59' }}:00" data-expired-text="{{ section.settings.expired_text | escape }}">
+          <div class="countdown__unit"><strong data-d>00</strong><span>Jours</span></div>
+          <div class="countdown__unit"><strong data-h>00</strong><span>Heures</span></div>
+          <div class="countdown__unit"><strong data-m>00</strong><span>Min</span></div>
+          <div class="countdown__unit"><strong data-s>00</strong><span>Sec</span></div>
+        </div>
+        {%- if section.settings.code != blank -%}
+          <p>Code : <button type="button" class="badge" data-copy="{{ section.settings.code | escape }}" style="border:0; font-size: .9rem;">{{ section.settings.code }}</button></p>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a class="btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow' %}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Compte à rebours",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Sur-titre", "default": "Offre limitée" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Fight Week -20 %" },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Sur une sélection de gants et protections Fighter.</p>" },
+    { "type": "text", "id": "end_date", "label": "Date de fin (AAAA-MM-JJ)", "default": "2026-11-30" },
+    { "type": "text", "id": "end_time", "label": "Heure de fin (HH:MM)", "default": "23:59" },
+    { "type": "text", "id": "expired_text", "label": "Texte une fois terminé", "default": "Offre terminée — restez connectés !" },
+    { "type": "text", "id": "code", "label": "Code promo (copiable)" },
+    { "type": "text", "id": "cta_label", "label": "Bouton", "default": "J'en profite" },
+    { "type": "url", "id": "cta_link", "label": "Lien" }
+  ],
+  "presets": [{ "name": "Compte à rebours" }]
+}
+{% endschema %}

@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "hero": {
+      "type": "universe-hero",
+      "blocks": {
+        "s1": { "type": "stat", "settings": { "value": "Made in EU", "label": "fabrication" } },
+        "s2": { "type": "stat", "settings": { "value": "24/48h", "label": "expédition" } },
+        "s3": { "type": "stat", "settings": { "value": "30 j", "label": "retours" } }
+      },
+      "block_order": ["s1", "s2", "s3"],
+      "settings": { "universe": "auto", "cta_label": "Voir toute la gamme" }
+    },
+    "marquee": { "type": "marquee", "settings": { "words": "Puissance, Précision, Endurance, Respect, Discipline", "bg": "#000000", "tilt": 0 } },
+    "products": {
+      "type": "featured-collection",
+      "blocks": {
+        "t1": { "type": "collection", "settings": { "label": "Best-sellers" } }
+      },
+      "block_order": ["t1"],
+      "settings": { "universe": "auto", "eyebrow": "La gamme", "title": "Les essentiels de la marque" }
+    },
+    "disciplines": { "type": "discipline-grid", "settings": { "eyebrow": "Par catégorie", "title": "Explore la gamme" } },
+    "story": { "type": "image-with-text", "settings": { "eyebrow": "L'histoire", "title": "Plus qu'une marque", "reverse": true } },
+    "trust": { "type": "trust-bar", "blocks": {
+        "i1": { "type": "item", "settings": { "icon": "truck", "title": "Un seul panier", "text": "Toutes nos marques, une livraison" } },
+        "i2": { "type": "item", "settings": { "icon": "return", "title": "Retours 30 jours", "text": "Échange de taille gratuit" } },
+        "i3": { "type": "item", "settings": { "icon": "shield", "title": "Paiement sécurisé", "text": "3x sans frais" } },
+        "i4": { "type": "item", "settings": { "icon": "chat", "title": "Conseil d'experts", "text": "Des pratiquants vous répondent" } }
+      }, "block_order": ["i1", "i2", "i3", "i4"], "settings": {} }
+  },
+  "order": ["hero", "marquee", "products", "disciplines", "story", "trust"]
+}

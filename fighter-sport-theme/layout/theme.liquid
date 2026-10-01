@@ -1,0 +1,204 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_bg }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64, height: 64 }}">
+    {%- endif -%}
+
+    {%- liquid
+      assign heading_font_bold = settings.type_heading_font | font_modify: 'weight', 'bolder'
+      assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+    -%}
+    {%- unless settings.type_heading_font.system? -%}
+      {{ settings.type_heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+    {%- endunless -%}
+    {%- unless settings.type_body_font.system? -%}
+      {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+    {%- endunless -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+
+    {{ content_for_header }}
+
+    <style>
+      {{ settings.type_heading_font | font_face: font_display: 'swap' }}
+      {{ heading_font_bold | font_face: font_display: 'swap' }}
+      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+
+      :root {
+        --font-heading: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+        --font-heading-weight: {{ settings.type_heading_font.weight }};
+        --font-body: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        --font-body-weight: {{ settings.type_body_font.weight }};
+        --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+        --heading-transform: {% if settings.heading_uppercase %}uppercase{% else %}none{% endif %};
+
+        --c-bg: {{ settings.color_bg }};
+        --c-surface: {{ settings.color_surface }};
+        --c-text: {{ settings.color_text }};
+        --c-muted: {{ settings.color_muted }};
+        --c-line: {{ settings.color_text | color_modify: 'alpha', 0.14 }};
+        --c-accent: {{ settings.color_accent }};
+        --c-accent-rgb: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
+        --c-accent-text: {{ settings.color_accent_text }};
+        --c-light: {{ settings.color_light }};
+        --c-light-text: {{ settings.color_light_text }};
+        --c-sale: {{ settings.color_sale }};
+
+        --radius: {{ settings.radius }}px;
+        --page-width: {{ settings.page_width }}px;
+        --grain-opacity: {% if settings.grain %}0.06{% else %}0{% endif %};
+      }
+    </style>
+
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+    {%- comment -%}
+      Mode marque : un seul site, plusieurs univers.
+      1. domaine dédié (request.host) → détecté côté serveur
+      2. lien ?univers=<identifiant> → mémorisé pour la visite (sessionStorage)
+      3. page / collection d'une marque → habillage de la marque
+    {%- endcomment -%}
+    {%- liquid
+      assign active_universe = 0
+      assign domain_universe = 0
+      assign domain_landing = blank
+      assign current_host = request.host | downcase | remove: 'www.'
+      assign primary_host = shop.domain | downcase | remove: 'www.'
+      for i in (1..4)
+        assign key_name = 'universe_' | append: i | append: '_name'
+        assign key_domain = 'universe_' | append: i | append: '_domain'
+        assign key_collection = 'universe_' | append: i | append: '_collection'
+        if settings[key_name] == blank
+          continue
+        endif
+        assign u_domain = settings[key_domain] | downcase | remove: 'https://' | remove: 'http://' | remove: 'www.' | remove: '/'
+        if u_domain != blank and u_domain == current_host and u_domain != primary_host
+          assign active_universe = i
+          assign domain_universe = i
+          assign key_url = 'universe_' | append: i | append: '_url'
+          assign domain_landing = settings[key_url]
+          break
+        endif
+        if template.name == 'collection' and settings[key_collection] != blank and collection.handle == settings[key_collection].handle
+          assign active_universe = i
+        endif
+        assign key_url = 'universe_' | append: i | append: '_url'
+        if template.name == 'page' and settings[key_url] != blank and settings[key_url] == page.url
+          assign active_universe = i
+        endif
+      endfor
+    -%}
+    <style>
+      {%- for i in (1..4) -%}
+        {%- assign key_name = 'universe_' | append: i | append: '_name' -%}
+        {%- assign key_accent = 'universe_' | append: i | append: '_accent' -%}
+        {%- if settings[key_name] != blank -%}
+          html[data-universe="{{ i }}"] {
+            --c-accent: {{ settings[key_accent] }};
+            --c-accent-rgb: {{ settings[key_accent].red }}, {{ settings[key_accent].green }}, {{ settings[key_accent].blue }};
+            --u-accent: {{ settings[key_accent] }};
+          }
+          html[data-universe="{{ i }}"] [data-logo-universe="{{ i }}"] { display: flex; }
+          html[data-universe="{{ i }}"] [data-hide-universe="{{ i }}"] { display: none !important; }
+        {%- endif -%}
+      {%- endfor -%}
+      [data-logo-universe]:not([data-logo-universe="0"]) { display: none; }
+      html[data-universe]:not([data-universe="0"]) [data-logo-universe="0"] { display: none; }
+    </style>
+    <script>
+      (function () {
+        var universes = [
+          {%- for i in (1..4) -%}
+            {%- assign key_name = 'universe_' | append: i | append: '_name' -%}
+            {%- assign key_handle = 'universe_' | append: i | append: '_handle' -%}
+            {%- if settings[key_name] != blank -%}
+              { index: {{ i }}, handle: {{ settings[key_handle] | default: settings[key_name] | handleize | json }} },
+            {%- endif -%}
+          {%- endfor -%}
+        ];
+        var server = {{ active_universe }};
+        {%- if domain_universe > 0 and template.name == 'index' and domain_landing != blank %}
+          // Domaine dédié d'une marque : la page d'accueil devient la page de la marque.
+          location.replace({{ domain_landing | json }} + location.search);
+        {%- endif %}
+        var persist = {{ settings.universe_persist | json }};
+        var store = 'fs_universe';
+        var param = null;
+        try { param = new URLSearchParams(location.search).get('univers'); } catch (e) {}
+        var chosen = server;
+        try {
+          if (param === 'reset' || param === 'none') { sessionStorage.removeItem(store); param = null; }
+          if (param) {
+            for (var i = 0; i < universes.length; i++) if (universes[i].handle === param) chosen = universes[i].index;
+          }
+          if (persist && chosen) sessionStorage.setItem(store, String(chosen));
+          if (!chosen && persist) chosen = parseInt(sessionStorage.getItem(store) || '0', 10);
+        } catch (e) {}
+        if (chosen) document.documentElement.setAttribute('data-universe', chosen);
+        window.activeUniverse = chosen || 0;
+      })();
+    </script>
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      window.theme = {
+        routes: {
+          root: {{ routes.root_url | json }},
+          cart: {{ routes.cart_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          search: {{ routes.predictive_search_url | json }}
+        },
+        cartType: {{ settings.cart_type | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        strings: {
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          unavailable: {{ 'products.product.unavailable' | t | json }},
+          added: {{ 'products.product.added' | t | json }},
+          lowStock: {{ 'products.product.low_stock_js' | t | json }},
+          inStock: {{ 'products.product.in_stock' | t | json }},
+          save: {{ 'products.product.save' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  </head>
+
+  <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}--{{ template.suffix }}{% endif %}">
+    <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="main" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
+
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+  </body>
+</html>

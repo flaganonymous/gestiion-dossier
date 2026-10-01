@@ -1,0 +1,65 @@
+{
+  "general": {
+    "menu": "Menu",
+    "main_menu": "Main menu",
+    "close": "Close",
+    "search": "Search",
+    "search_placeholder": "Gloves, gi, punching bag…",
+    "account": "Account",
+    "cart": "Cart",
+    "view_all": "View all",
+    "previous": "Previous",
+    "next": "Next",
+    "404_title": "This page got knocked out",
+    "404_text": "The page you are looking for does not exist."
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "add": "Add",
+      "added": "Added to cart 🥊",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "choose_options": "Choose",
+      "from": "From",
+      "save": "Save",
+      "tax_included": "Tax included — shipping calculated at checkout",
+      "quantity": "Quantity",
+      "size_guide": "Size guide",
+      "in_stock": "In stock — ships in 24/48h",
+      "low_stock": "Only {{ count }} left — order now!",
+      "low_stock_js": "Only __count__ left — order now!",
+      "description": "Description",
+      "products": "products",
+      "colors": "colors"
+    },
+    "badges": {
+      "new": "New",
+      "last_items": "Last items"
+    }
+  },
+  "collections": {
+    "filters": "Filter",
+    "sort_by": "Sort by",
+    "clear": "Clear all",
+    "empty": "No products match these filters."
+  },
+  "cart": {
+    "empty": "Your cart is empty",
+    "continue": "Continue shopping",
+    "remove": "Remove",
+    "total": "Total",
+    "taxes": "Tax included. Shipping calculated at checkout.",
+    "checkout": "Checkout",
+    "note": "Order note",
+    "upsell": "Complete your gear",
+    "shipping_remaining_html": "Only <strong>{{ amount }}</strong> away from free shipping",
+    "shipping_unlocked": "You unlocked free shipping 🎉"
+  },
+  "search": {
+    "results_count": "{{ count }} result(s) for “{{ terms }}”"
+  }
+}

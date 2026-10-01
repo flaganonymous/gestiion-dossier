@@ -1,0 +1,24 @@
+{%- comment -%}
+  Renvoie l'index (1-4) de l'univers correspondant au fournisseur, ou rien.
+  Usage : {% capture u %}{% render 'universe-index', vendor: product.vendor %}{% endcapture %}
+{%- endcomment -%}
+{%- liquid
+  assign v = vendor | downcase | strip
+  assign found = false
+  for i in (1..4)
+    assign key_name = 'universe_' | append: i | append: '_name'
+    assign key_vendor = 'universe_' | append: i | append: '_vendor'
+    if found or settings[key_name] == blank
+      continue
+    endif
+    assign vendors = settings[key_vendor] | default: settings[key_name] | downcase | split: ','
+    for candidate in vendors
+      assign c = candidate | strip
+      if c != blank and c == v
+        echo i
+        assign found = true
+        break
+      endif
+    endfor
+  endfor
+-%}
